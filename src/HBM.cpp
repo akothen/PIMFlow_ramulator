@@ -9,16 +9,21 @@ using namespace std;
 using namespace ramulator;
 
 string HBM::standard_name = "HBM";
-string HBM::level_str [int(Level::MAX)] = {"Ch", "Ra", "Bg", "Ba", "Ro", "Co"};
 
 map<string, enum HBM::Org> HBM::org_map = {
     {"HBM_1Gb", HBM::Org::HBM_1Gb},
     {"HBM_2Gb", HBM::Org::HBM_2Gb},
     {"HBM_4Gb", HBM::Org::HBM_4Gb},
+    {"HBM_4Gb_bank32", HBM::Org::HBM_4Gb_bank32},
+    {"HBM_4Gb_bank64", HBM::Org::HBM_4Gb_bank64},
+    {"HBM_4Gb_bank128", HBM::Org::HBM_4Gb_bank128},
+    {"HBM_4Gb_bank256", HBM::Org::HBM_4Gb_bank256},
+    {"HBM_4Gb_bank512", HBM::Org::HBM_4Gb_bank512},
 };
 
 map<string, enum HBM::Speed> HBM::speed_map = {
     {"HBM_1Gbps", HBM::Speed::HBM_1Gbps},
+    {"HBM_1Gbps_unlimit_bandwidth", HBM::Speed::HBM_1Gbps_unlimit_bandwidth},
 };
 
 HBM::HBM(Org org, Speed speed)
@@ -97,6 +102,16 @@ void HBM::init_prereq()
                 else return Command::PRE;
             default: assert(false);
         }};
+    prereq[int(Level::Bank)][int(Command::G_ACT0)] = [] (DRAM<HBM>* node, Command cmd, int id) {
+        switch (int(node->state)) {
+            case int(State::Closed): return cmd;
+            case int(State::Opened):
+                if (node->row_state.find(id) != node->row_state.end())
+                    return cmd;
+                else return Command::PREA;
+            default: assert(false);
+        }};
+    
 
     // WR
     prereq[int(Level::Rank)][int(Command::WR)] = prereq[int(Level::Rank)][int(Command::RD)];
@@ -208,6 +223,25 @@ void HBM::init_lambda()
         node->state = State::SelfRefresh;};
     lambda[int(Level::Rank)][int(Command::SRX)] = [] (DRAM<HBM>* node, int id) {
         node->state = State::PowerUp;};
+
+    //TODO : add lambda for Newton GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, READRES,
+    
+    lambda[int(Level::BankGroup)][int(Command::G_ACT0)] = [] (DRAM<HBM>* node, int id) {
+        //id is row id
+        for (auto bank : node->children) {
+            assert(bank->state != State::Opened);
+            if (bank->state == State::Closed) {
+                bank->state = State::Opened;
+                bank->row_state[id] = State::Opened;
+            }
+        }};
+    lambda[int(Level::BankGroup)][int(Command::G_ACT1)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
+    lambda[int(Level::BankGroup)][int(Command::G_ACT2)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
+    lambda[int(Level::BankGroup)][int(Command::G_ACT3)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
+    lambda[int(Level::Rank)][int(Command::COMP)] = [] (DRAM<HBM>* node, int id) {};
+    lambda[int(Level::Rank)][int(Command::GWRITE)] = [] (DRAM<HBM>* node, int id) {};
+    lambda[int(Level::Rank)][int(Command::READRES)] = [] (DRAM<HBM>* node, int id) {};
+
 }
 
 
@@ -310,6 +344,18 @@ void HBM::init_timing()
     t[int(Command::SRE)].push_back({Command::SRX, 1, s.nCKESR});
     t[int(Command::SRX)].push_back({Command::SRE, 1, s.nXS});
 
+    //for Newton GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, READRES
+    t[int(Command::GWRITE)].push_back({Command::G_ACT0, 1, s.nCCDS*32});
+    t[int(Command::PREA)].push_back({Command::G_ACT0, 1, s.nRP});
+    t[int(Command::G_ACT0)].push_back({Command::G_ACT1, 1, s.nFAW});
+    t[int(Command::G_ACT1)].push_back({Command::G_ACT2, 1, s.nFAW});
+    t[int(Command::G_ACT2)].push_back({Command::G_ACT3, 1, s.nFAW});
+    t[int(Command::G_ACT3)].push_back({Command::COMP, 1, s.nRCDR});
+    t[int(Command::COMP)].push_back({Command::COMP, 1, s.nCCDS});
+    t[int(Command::COMP)].push_back({Command::READRES, 1, s.nCCDS*6});
+    t[int(Command::READRES)].push_back({Command::PREA, 1, s.nCL});
+    t[int(Command::READRES)].push_back({Command::GWRITE, 1, s.nCL});
+
     /*** Bank Group ***/
     t = timing[int(Level::BankGroup)];
     // CAS <-> CAS
@@ -317,10 +363,6 @@ void HBM::init_timing()
     t[int(Command::RD)].push_back({Command::RDA, 1, s.nCCDL});
     t[int(Command::RDA)].push_back({Command::RD, 1, s.nCCDL});
     t[int(Command::RDA)].push_back({Command::RDA, 1, s.nCCDL});
-    t[int(Command::WR)].push_back({Command::WR, 1, s.nCCDL});
-    t[int(Command::WR)].push_back({Command::WRA, 1, s.nCCDL});
-    t[int(Command::WRA)].push_back({Command::WR, 1, s.nCCDL});
-    t[int(Command::WRA)].push_back({Command::WRA, 1, s.nCCDL});
     t[int(Command::WR)].push_back({Command::WR, 1, s.nCCDL});
     t[int(Command::WR)].push_back({Command::WRA, 1, s.nCCDL});
     t[int(Command::WRA)].push_back({Command::WR, 1, s.nCCDL});
@@ -357,4 +399,8 @@ void HBM::init_timing()
     t[int(Command::PRE)].push_back({Command::REFSB, 1, s.nRP});
     t[int(Command::REFSB)].push_back({Command::REFSB, 1, s.nRFC});
     t[int(Command::REFSB)].push_back({Command::ACT, 1, s.nRFC});
+
+    //for Newton
+    t[int(Command::COMP)].push_back({Command::COMP, 1, s.nCCDL});
+    t[int(Command::COMP)].push_back({Command::READRES, 1, s.nCCDL*6});
 }

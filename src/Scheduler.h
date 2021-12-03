@@ -70,7 +70,7 @@ public:
     Controller<T>* ctrl;
 
     enum class Type {
-        FCFS, FRFCFS, FRFCFS_Cap, FRFCFS_PriorHit, MAX
+        FCFS, FRFCFS, FRFCFS_Cap, FRFCFS_PriorHit, FIFO, MAX
     } type = Type::FRFCFS_Cap; //Change this line to change scheduling policy
 
     long cap = 16; //Change this line to change cap
@@ -80,7 +80,7 @@ public:
     list<Request>::iterator get_head(list<Request>& q)
     {
         // TODO make the decision at compile time
-        if (type != Type::FRFCFS_PriorHit) {
+        else if (type != Type::FRFCFS_PriorHit) {
             //If queue is empty, return end of queue
             if (!q.size())
                 return q.end();

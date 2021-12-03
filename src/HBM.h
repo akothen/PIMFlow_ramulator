@@ -28,8 +28,6 @@ public:
     {
         Channel, Rank, BankGroup, Bank, Row, Column, MAX
     };
-    
-    static std::string level_str [int(Level::MAX)];
 
     /* Command */
     enum class Command : int
@@ -37,6 +35,7 @@ public:
         ACT, PRE,   PREA,
         RD,  WR,    RDA, WRA,
         REF, REFSB, PDE, PDX,  SRE, SRX,
+        GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, READRES, //for Newton
         MAX
     };
 
@@ -47,19 +46,25 @@ public:
     string command_name[int(Command::MAX)] = {
         "ACT", "PRE",   "PREA",
         "RD",  "WR",    "RDA",  "WRA",
-        "REF", "REFSB", "PDE",  "PDX",  "SRE", "SRX"
+        "REF", "REFSB", "PDE",  "PDX",  "SRE", "SRX",
+        "GWRITE", "G_ACT0", "G_ACT1", "G_ACT2", "G_ACT3", "COMP", "READRES" //for Newton
     };
 
     Level scope[int(Command::MAX)] = {
         Level::Row,    Level::Bank,   Level::Rank,
         Level::Column, Level::Column, Level::Column, Level::Column,
-        Level::Rank,   Level::Bank,   Level::Rank,   Level::Rank,   Level::Rank,   Level::Rank
+        Level::Rank,   Level::Bank,   Level::Rank,   Level::Rank,   Level::Rank,   Level::Rank,
+        Level::Rank,   Level::BankGroup, Level::BankGroup, Level::BankGroup, Level::BankGroup, Level::Column, Level::Bank //for Newton
     };
 
     bool is_opening(Command cmd)
     {
         switch(int(cmd)) {
             case int(Command::ACT):
+            case int(Command::G_ACT0):
+            case int(Command::G_ACT1):
+            case int(Command::G_ACT2):
+            case int(Command::G_ACT3):
                 return true;
             default:
                 return false;
@@ -73,6 +78,9 @@ public:
             case int(Command::WR):
             case int(Command::RDA):
             case int(Command::WRA):
+            case int(Command::COMP):
+            //TODO : case int(Command::GWRITE): have to include GWRITE to is_accessing()?
+            //TODO : case int(Command::READRES): have to include READRES to is_accessing()?
                 return true;
             default:
                 return false;
@@ -114,7 +122,8 @@ public:
     /* Translate */
     Command translate[int(Request::Type::MAX)] = {
         Command::RD,  Command::WR,
-        Command::REF, Command::PDE, Command::SRE
+        Command::REF, Command::PDE, Command::SRE,
+        Command::GWRITE, Command::G_ACT0, Command::G_ACT1, Command::G_ACT2, Command::G_ACT3, Command::COMP, Command::READRES //for Newton
     };
 
     /* Prereq */
@@ -144,6 +153,11 @@ public:
         HBM_1Gb,
         HBM_2Gb,
         HBM_4Gb,
+        HBM_4Gb_bank32,
+        HBM_4Gb_bank64,
+        HBM_4Gb_bank128,
+        HBM_4Gb_bank256,
+        HBM_4Gb_bank512,
         MAX
     };
 
@@ -155,6 +169,11 @@ public:
         {1<<10, 128, {0, 0, 4, 2, 1<<13, 1<<(6+1)}},
         {2<<10, 128, {0, 0, 4, 2, 1<<14, 1<<(6+1)}},
         {4<<10, 128, {0, 0, 4, 4, 1<<14, 1<<(6+1)}},
+        {4<<10, 128, {0, 0, 4, 8, 1<<13, 1<<(6+1)}},
+        {4<<10, 128, {0, 0, 4, 16, 1<<12, 1<<(6+1)}},
+        {4<<10, 128, {0, 0, 4, 32, 1<<11, 1<<(6+1)}},
+        {4<<10, 128, {0, 0, 4, 64, 1<<10, 1<<(6+1)}},
+        {4<<10, 128, {0, 0, 4, 128, 1<<9, 1<<(6+1)}},
     }, org_entry;
 
     void set_channel_number(int channel);
@@ -164,6 +183,7 @@ public:
     enum class Speed : int
     {
         HBM_1Gbps,
+        HBM_1Gbps_unlimit_bandwidth,
         MAX
     };
 
@@ -182,7 +202,8 @@ public:
         int nPD, nXP;
         int nCKESR, nXS;
     } speed_table[int(Speed::MAX)] = {
-        {1000, 500, 2.0, 2, 2, 3, 7, 7, 6, 7, 4, 17, 24, 7, 2, 4, 8, 4, 5, 20, 0, 1950, 0, 5, 5, 5, 0}
+        {1000, 500, 2.0, 2, 2, 3, 7, 7, 6, 7, 4, 17, 24, 7, 2, 4, 8, 4, 5, 20, 0, 1950, 0, 5, 5, 5, 0},
+        {1000, 500, 2.0, 0, 1, 1, 7, 7, 6, 7, 4, 17, 24, 7, 2, 4, 8, 4, 5, 20, 0, 1950, 0, 5, 5, 5, 0},
     }, speed_entry;
 
     int read_latency;

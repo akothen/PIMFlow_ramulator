@@ -336,8 +336,23 @@ template <typename T>
 void DRAM<T>::update_state(typename T::Command cmd, const int* addr)
 {
     int child_id = addr[int(level)+1];
+    //for Newton
+    if (lambda[int(cmd)]) {
+        if (level == int(T::Level::BankGroup) && 
+            (cmd == int(T::Command::G_ACT0) || cmd == int(T::Command::G_ACT1) || cmd == int(T::Command::G_ACT2) || cmd == int(T::Command::G_ACT3))) {
+            //if this level is BankGroup and cmd is G_ACT, send row number as child_id to lambda
+            int row_id = addr[int(level)+2];
+            lambda[int(cmd)](this, row_id); // update this level
+        }
+        else {
+            lambda[int(cmd)](this, child_id); // update this level
+        }
+    }
+    
+    /*
     if (lambda[int(cmd)])
         lambda[int(cmd)](this, child_id); // update this level
+    */
 
     if (level == spec->scope[int(cmd)] || !children.size())
         return; // stop recursion: updated all levels

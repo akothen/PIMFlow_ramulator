@@ -26,6 +26,13 @@ public:
         REFRESH,
         POWERDOWN,
         SELFREFRESH,
+        GWRITE, 
+        G_ACT0, 
+        G_ACT1, 
+        G_ACT2, 
+        G_ACT3, 
+        COMP, 
+        READRES,
         EXTENSION,
         MAX
     } type;

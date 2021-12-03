@@ -71,6 +71,7 @@ public:
     DRAM<T>* channel;
 
     Scheduler<T>* scheduler;  // determines the highest priority request whose commands will be issued
+    Scheduler<T>* pim_scheduler; //FCFS scheduler for Newton
     RowPolicy<T>* rowpolicy;  // determines the row-policy (e.g., closed-row vs. open-row)
     RowTable<T>* rowtable;  // tracks metadata about rows (e.g., which are open and for how long)
     Refresh<T>* refresh;
@@ -89,6 +90,7 @@ public:
                    // for avoiding useless activations (i.e., PRECHARGE
                    // after ACTIVATE w/o READ of WRITE command)
     Queue otherq;  // queue for all "other" requests (e.g., refresh)
+    Queue pimq; //queue for PIM command
 
     deque<Request> pending;  // read requests that are about to receive data from DRAM
     bool write_mode = false;  // whether write requests should be prioritized over reads
@@ -107,6 +109,7 @@ public:
     Controller(const Config& configs, DRAM<T>* channel) :
         channel(channel),
         scheduler(new Scheduler<T>(this)),
+        pim_scheduler(new Scheduler<T>(this)),
         rowpolicy(new RowPolicy<T>(this)),
         rowtable(new RowTable<T>(this)),
         refresh(new Refresh<T>(this)),
@@ -282,6 +285,7 @@ public:
 
     ~Controller(){
         delete scheduler;
+        delete pim_scheduler;
         delete rowpolicy;
         delete rowtable;
         delete channel;
@@ -381,12 +385,16 @@ public:
         }
 
         if (!is_valid_req) {
+            /*
             queue = !write_mode ? &readq : &writeq;
 
             if (otherq.size())
                 queue = &otherq;  // "other" requests are rare, so we give them precedence over reads/writes
+            */
+            //TODO : refresh scheduling at here
+            queue = &pimq;
 
-            req = scheduler->get_head(queue->q);
+            req = pim_scheduler->get_head(queue->q);
 
             is_valid_req = (req != queue->q.end());
 
