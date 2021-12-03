@@ -366,6 +366,7 @@ void DRAM<T>::update_state(typename T::Command cmd, const int* addr)
 template <typename T>
 void DRAM<T>::update_timing(typename T::Command cmd, const int* addr, long clk)
 {
+    //TODO : have to check - for Newton
     // I am not a target node: I am merely one of its siblings
     if (id != addr[int(level)]) {
         for (auto& t : timing[int(cmd)]) {

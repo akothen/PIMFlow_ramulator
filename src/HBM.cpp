@@ -29,7 +29,8 @@ map<string, enum HBM::Speed> HBM::speed_map = {
 HBM::HBM(Org org, Speed speed)
     : org_entry(org_table[int(org)]),
     speed_entry(speed_table[int(speed)]),
-    read_latency(speed_entry.nCL + speed_entry.nBL)
+    read_latency(speed_entry.nCL + speed_entry.nBL),
+    readres_latency(speed_entry.nCL)
 {
     init_speed();
     init_prereq();

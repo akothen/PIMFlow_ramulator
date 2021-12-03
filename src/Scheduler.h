@@ -70,12 +70,16 @@ public:
     Controller<T>* ctrl;
 
     enum class Type {
-        FCFS, FRFCFS, FRFCFS_Cap, FRFCFS_PriorHit, FIFO, MAX
+        FCFS, FRFCFS, FRFCFS_Cap, FRFCFS_PriorHit, MAX
     } type = Type::FRFCFS_Cap; //Change this line to change scheduling policy
 
     long cap = 16; //Change this line to change cap
 
     Scheduler(Controller<T>* ctrl) : ctrl(ctrl) {}
+
+    void set_type(Type _type) {
+        type = _type;
+    }
 
     list<Request>::iterator get_head(list<Request>& q)
     {

@@ -207,6 +207,7 @@ public:
     }, speed_entry;
 
     int read_latency;
+    int readres_latency;
 
 private:
     void init_speed();

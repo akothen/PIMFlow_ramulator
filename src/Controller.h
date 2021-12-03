@@ -94,6 +94,7 @@ public:
 
     deque<Request> pending;  // read requests that are about to receive data from DRAM
     bool write_mode = false;  // whether write requests should be prioritized over reads
+    bool refresh_mode = false; //turn true when issue READRES command --> for Newton
     float wr_high_watermark = 0.8f; // threshold for switching to write mode
     float wr_low_watermark = 0.2f; // threshold for switching back to read mode
     //long refreshed = 0;  // last time refresh requests were generated
@@ -115,6 +116,8 @@ public:
         refresh(new Refresh<T>(this)),
         cmd_trace_files(channel->children.size())
     {
+        pim_scheduler->set_type(ramulator::Scheduler<T>::Type::FCFS);//for Newton
+
         record_cmd_trace = configs.record_cmd_trace();
         print_cmd_trace = configs.print_cmd_trace();
         if (record_cmd_trace){
@@ -310,6 +313,14 @@ public:
         switch (int(type)) {
             case int(Request::Type::READ): return readq;
             case int(Request::Type::WRITE): return writeq;
+            case int(Request::Type::GWRITE):
+            case int(Request::Type::G_ACT0):
+            case int(Request::Type::G_ACT1):
+            case int(Request::Type::G_ACT2):
+            case int(Request::Type::G_ACT3):
+            case int(Request::Type::COMP):
+            case int(Request::Type::READRES):
+                return pimq;
             default: return otherq;
         }
     }
@@ -324,12 +335,14 @@ public:
         queue.q.push_back(req);
         // shortcut for read requests, if a write to same addr exists
         // necessary for coherence
+        /*
         if (req.type == Request::Type::READ && find_if(writeq.q.begin(), writeq.q.end(),
                 [req](Request& wreq){ return req.addr == wreq.addr;}) != writeq.q.end()){
             req.depart = clk + 1;
             pending.push_back(req);
             readq.q.pop_back();
         }
+        */
         return true;
     }
 
@@ -344,11 +357,13 @@ public:
         if (pending.size()) {
             Request& req = pending[0];
             if (req.depart <= clk) {
+                /* this part is about stat
                 if (req.depart - req.arrive > 1) { // this request really accessed a row
                   read_latency_sum += req.depart - req.arrive;
                   channel->update_serving_requests(
                       req.addr_vec.data(), -1, clk);
                 }
+                */
                 req.callback(req);
                 pending.pop_front();
             }
@@ -358,6 +373,7 @@ public:
         refresh->tick_ref();
 
         /*** 3. Should we schedule writes? ***/
+        /*
         if (!write_mode) {
             // yes -- write queue is almost full or read queue is empty
             if (writeq.size() > int(wr_high_watermark * writeq.max) || readq.size() == 0)
@@ -368,7 +384,7 @@ public:
             if (writeq.size() < int(wr_low_watermark * writeq.max) && readq.size() != 0)
                 write_mode = false;
         }
-
+        */
         /*** 4. Find the best command to schedule, if any ***/
 
         // First check the actq (which has higher priority) to see if there
@@ -392,9 +408,14 @@ public:
                 queue = &otherq;  // "other" requests are rare, so we give them precedence over reads/writes
             */
             //TODO : refresh scheduling at here
-            queue = &pimq;
+            if (refresh_mode && !otherq.size())
+                refresh_mode = false;
+            queue = !refresh_mode? &pimq : &otherq;
 
-            req = pim_scheduler->get_head(queue->q);
+            if (refresh_mode)
+                req = scheduler->get_head(queue->q);
+            else
+                req = pim_scheduler->get_head(queue->q);
 
             is_valid_req = (req != queue->q.end());
 
@@ -406,14 +427,17 @@ public:
 
         if (!is_valid_req) {
             // we couldn't find a command to schedule -- let's try to be speculative
+            /*
             auto cmd = T::Command::PRE;
             vector<int> victim = rowpolicy->get_victim(cmd);
             if (!victim.empty()){
                 issue_cmd(cmd, victim);
             }
+            */
             return;  // nothing more to be done this cycle
         }
 
+        /*
         if (req->is_first_command) {
             req->is_first_command = false;
             int coreid = req->coreid;
@@ -447,12 +471,14 @@ public:
               write_transaction_bytes += tx;
             }
         }
+        */
 
         // issue command on behalf of request
         issue_cmd(cmd, get_addr_vec(cmd, req));
 
         // check whether this is the last command (which finishes the request)
         //if (cmd != channel->spec->translate[int(req->type)]){
+        /*
         if (cmd != channel->spec->translate[int(req->type)]) {
             if(channel->spec->is_opening(cmd)) {
                 // promote the request that caused issuing activation to actq
@@ -462,6 +488,14 @@ public:
 
             return;
         }
+        */
+
+        //for Newton
+        if (cmd == T::Command::READRES) {
+            //if issue READRES, turn on refresh_mode
+            assert(!refresh_mode);
+            refresh_mode = true;
+        }
 
         // set a future completion time for read requests
         if (req->type == Request::Type::READ) {
@@ -470,7 +504,7 @@ public:
         }
 
         if (req->type == Request::Type::WRITE) {
-            channel->update_serving_requests(req->addr_vec.data(), -1, clk);
+            //channel->update_serving_requests(req->addr_vec.data(), -1, clk);
             // req->callback(*req);
         }
 
@@ -605,7 +639,7 @@ private:
 
     void issue_cmd(typename T::Command cmd, const vector<int>& addr_vec)
     {
-        cmd_issue_autoprecharge(cmd, addr_vec);
+        cmd_issue_autoprecharge(cmd, addr_vec);//TODO : have to check - for Newton
         assert(is_ready(cmd, addr_vec));
         channel->update(cmd, addr_vec.data(), clk);
 
@@ -615,7 +649,7 @@ private:
             }
         }
  
-        rowtable->update(cmd, addr_vec, clk);
+        rowtable->update(cmd, addr_vec, clk); //TODO : have to check - for Newton
         if (record_cmd_trace){
             // select rank
             auto& file = cmd_trace_files[addr_vec[1]];
