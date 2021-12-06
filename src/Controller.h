@@ -18,7 +18,8 @@
 
 #include "ALDRAM.h"
 #include "SALP.h"
-#include "TLDRAM.h"
+#include "HBM.h"
+//#include "TLDRAM.h"
 
 using namespace std;
 
@@ -407,7 +408,7 @@ public:
             if (otherq.size())
                 queue = &otherq;  // "other" requests are rare, so we give them precedence over reads/writes
             */
-            //TODO : refresh scheduling at here
+            //refresh scheduling for Newton
             if (refresh_mode && !otherq.size())
                 refresh_mode = false;
             queue = !refresh_mode? &pimq : &otherq;
@@ -489,13 +490,6 @@ public:
             return;
         }
         */
-
-        //for Newton
-        if (cmd == T::Command::READRES) {
-            //if issue READRES, turn on refresh_mode
-            assert(!refresh_mode);
-            refresh_mode = true;
-        }
 
         // set a future completion time for read requests
         if (req->type == Request::Type::READ) {
@@ -639,7 +633,7 @@ private:
 
     void issue_cmd(typename T::Command cmd, const vector<int>& addr_vec)
     {
-        cmd_issue_autoprecharge(cmd, addr_vec);//TODO : have to check - for Newton
+        cmd_issue_autoprecharge(cmd, addr_vec);//this function is valid when RowPolicy is ClosedAP -> Not for Newton
         assert(is_ready(cmd, addr_vec));
         channel->update(cmd, addr_vec.data(), clk);
 
@@ -649,7 +643,7 @@ private:
             }
         }
  
-        rowtable->update(cmd, addr_vec, clk); //TODO : have to check - for Newton
+        rowtable->update(cmd, addr_vec, clk);
         if (record_cmd_trace){
             // select rank
             auto& file = cmd_trace_files[addr_vec[1]];
@@ -688,11 +682,7 @@ template <>
 void Controller<ALDRAM>::update_temp(ALDRAM::Temp current_temperature);
 
 template <>
-void Controller<TLDRAM>::tick();
-
-template <>
-void Controller<TLDRAM>::cmd_issue_autoprecharge(typename TLDRAM::Command& cmd,
-                                                    const vector<int>& addr_vec);
+void Controller<HBM>::tick();
 
 } /*namespace ramulator*/
 

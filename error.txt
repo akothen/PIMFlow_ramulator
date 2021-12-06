@@ -1,0 +1,118 @@
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::DDR3>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:234:7: note: in instantiation of function template specialization 'start_run<ramulator::DDR3>' requested here
+      start_run(configs, ddr3, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::DDR4>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:237:7: note: in instantiation of function template specialization 'start_run<ramulator::DDR4>' requested here
+      start_run(configs, ddr4, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::SALP>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:240:7: note: in instantiation of function template specialization 'start_run<ramulator::SALP>' requested here
+      start_run(configs, salp8, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::LPDDR3>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:243:7: note: in instantiation of function template specialization 'start_run<ramulator::LPDDR3>' requested here
+      start_run(configs, lpddr3, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::LPDDR4>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:247:7: note: in instantiation of function template specialization 'start_run<ramulator::LPDDR4>' requested here
+      start_run(configs, lpddr4, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::GDDR5>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:250:7: note: in instantiation of function template specialization 'start_run<ramulator::GDDR5>' requested here
+      start_run(configs, gddr5, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::HBM>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:253:7: note: in instantiation of function template specialization 'start_run<ramulator::HBM>' requested here
+      start_run(configs, hbm, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::WideIO>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:257:7: note: in instantiation of function template specialization 'start_run<ramulator::WideIO>' requested here
+      start_run(configs, wio, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::WideIO2>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:262:7: note: in instantiation of function template specialization 'start_run<ramulator::WideIO2>' requested here
+      start_run(configs, wio2, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::STTMRAM>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:265:7: note: in instantiation of function template specialization 'start_run<ramulator::STTMRAM>' requested here
+      start_run(configs, sttmram, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::PCM>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:268:7: note: in instantiation of function template specialization 'start_run<ramulator::PCM>' requested here
+      start_run(configs, pcm, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::DSARP>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:273:7: note: in instantiation of function template specialization 'start_run<ramulator::DSARP>' requested here
+      start_run(configs, dsddr3_dsarp, files);
+      ^
+src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
+    auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
+         ^
+src/Main.cpp:182:5: note: in instantiation of function template specialization 'run_dramtrace<ramulator::ALDRAM>' requested here
+    run_dramtrace(configs, memory, files[0]);
+    ^
+src/Main.cpp:276:7: note: in instantiation of function template specialization 'start_run<ramulator::ALDRAM>' requested here
+      start_run(configs, aldram, files);
+      ^
+13 warnings generated.

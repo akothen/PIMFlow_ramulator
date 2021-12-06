@@ -468,6 +468,20 @@ bool Trace::get_dramtrace_request(long& req_addr, Request::Type& req_type)
         req_type = Request::Type::READ;
     else if (line.substr(pos)[0] == 'W')
         req_type = Request::Type::WRITE;
+    else if (line.substr(pos) == "GWRITE")
+        req_type = Request::Type::GWRITE;
+    else if (line.substr(pos) == "G_ACT0")
+        req_type = Request::Type::G_ACT0;
+    else if (line.substr(pos) == "G_ACT1")
+        req_type = Request::Type::G_ACT1;
+    else if (line.substr(pos) == "G_ACT2")
+        req_type = Request::Type::G_ACT2;
+    else if (line.substr(pos) == "G_ACT3")
+        req_type = Request::Type::G_ACT3;
+    else if (line.substr(pos) == "COMP")
+        req_type = Request::Type::COMP;
+    else if (line.substr(pos) == "READRES")
+        req_type = Request::Type::READRES;
     else assert(false);
     return true;
 }

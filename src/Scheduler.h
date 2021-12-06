@@ -84,7 +84,7 @@ public:
     list<Request>::iterator get_head(list<Request>& q)
     {
         // TODO make the decision at compile time
-        else if (type != Type::FRFCFS_PriorHit) {
+        if (type != Type::FRFCFS_PriorHit) {
             //If queue is empty, return end of queue
             if (!q.size())
                 return q.end();
@@ -296,10 +296,22 @@ public:
 
         T* spec = ctrl->channel->spec;
 
-        if (spec->is_opening(cmd))
-            table.insert({rowgroup, {row, 0, clk}});
+        if (spec->is_opening(cmd)) {
+            if (spec->is_pim_opening(cmd)) {
+                int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
+                for (int i = 0; i < 4; i++) {
+                    rowgroup[int(T::Level::Bank)] = BG + i;
+                    std::cout<<"G_ACT with Bank : "<<rowgroup[int(T::Level::Bank)]<<std::endl;
+                    table.insert({rowgroup, {row, 0, clk}});
+                }
+            }
+            else 
+                table.insert({rowgroup, {row, 0, clk}});
+        }
+            
 
-        if (spec->is_accessing(cmd)) {
+        if ((spec->is_accessing(cmd)) && (!spec->is_pim_accessing(cmd))) {
+            //only update entry when cmd is not pim's - for Newton
             // we are accessing a row -- update its entry
             auto match = table.find(rowgroup);
             assert(match != table.end());

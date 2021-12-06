@@ -338,8 +338,8 @@ void DRAM<T>::update_state(typename T::Command cmd, const int* addr)
     int child_id = addr[int(level)+1];
     //for Newton
     if (lambda[int(cmd)]) {
-        if (level == int(T::Level::BankGroup) && 
-            (cmd == int(T::Command::G_ACT0) || cmd == int(T::Command::G_ACT1) || cmd == int(T::Command::G_ACT2) || cmd == int(T::Command::G_ACT3))) {
+        if (spec->is_BG(level) && 
+            spec->is_pim_opening(cmd)) {
             //if this level is BankGroup and cmd is G_ACT, send row number as child_id to lambda
             int row_id = addr[int(level)+2];
             lambda[int(cmd)](this, row_id); // update this level
@@ -366,7 +366,6 @@ void DRAM<T>::update_state(typename T::Command cmd, const int* addr)
 template <typename T>
 void DRAM<T>::update_timing(typename T::Command cmd, const int* addr, long clk)
 {
-    //TODO : have to check - for Newton
     // I am not a target node: I am merely one of its siblings
     if (id != addr[int(level)]) {
         for (auto& t : timing[int(cmd)]) {

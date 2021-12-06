@@ -96,7 +96,18 @@ public:
         Level::Rank,   Level::Bank,
         Level::Rank,   Level::Rank,   Level::Rank,   Level::Rank
     };
-
+    bool is_BG(Level level)
+    {
+        return false;
+    }
+    bool is_pim_opening(Command cmd)
+    {
+        return false;
+    }
+    bool is_pim_accessing(Command cmd)
+    {
+        return false;
+    }
     bool is_opening(Command cmd)
     {
         switch(int(cmd)) {

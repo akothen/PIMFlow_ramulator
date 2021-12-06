@@ -28,7 +28,7 @@ public:
     {
         Channel, Rank, BankGroup, Bank, Row, Column, MAX
     };
-
+    static std::string level_str [int(Level::MAX)];
     /* Command */
     enum class Command : int
     {
@@ -57,10 +57,33 @@ public:
         Level::Rank,   Level::BankGroup, Level::BankGroup, Level::BankGroup, Level::BankGroup, Level::Column, Level::Bank //for Newton
     };
 
+    bool is_BG(Level level)
+    {
+        switch(int(level)) {
+            case int(Level::BankGroup):
+                return true;
+            default:
+                return false;
+        }
+    }
+
     bool is_opening(Command cmd)
     {
         switch(int(cmd)) {
             case int(Command::ACT):
+            case int(Command::G_ACT0):
+            case int(Command::G_ACT1):
+            case int(Command::G_ACT2):
+            case int(Command::G_ACT3):
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    bool is_pim_opening(Command cmd)
+    {
+        switch(int(cmd)) {
             case int(Command::G_ACT0):
             case int(Command::G_ACT1):
             case int(Command::G_ACT2):
@@ -81,6 +104,16 @@ public:
             case int(Command::COMP):
             //TODO : case int(Command::GWRITE): have to include GWRITE to is_accessing()?
             //TODO : case int(Command::READRES): have to include READRES to is_accessing()?
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    bool is_pim_accessing(Command cmd)
+    {
+        switch(int(cmd)) {
+            case int(Command::COMP):
                 return true;
             default:
                 return false;

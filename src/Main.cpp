@@ -25,7 +25,6 @@
 #include "HBM.h"
 #include "SALP.h"
 #include "ALDRAM.h"
-#include "TLDRAM.h"
 #include "STTMRAM.h"
 #include "PCM.h"
 
@@ -42,13 +41,14 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
 
     /* run simulation */
     bool stall = false, end = false;
-    int reads = 0, writes = 0, clks = 0;
+    int reads = 0, writes = 0, clks = 0, gwrite = 0, gact0 = 0, gact1 = 0, gact2 = 0, gact3 = 0, comp = 0, readres = 0;
     long addr = 0;
     Request::Type type = Request::Type::READ;
     map<int, int> latencies;
     auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
 
-    Request req(addr, type, read_complete);
+    //Request req(addr, type, read_complete);
+    Request req(addr, type); //for Newton
 
     while (!end || memory.pending_requests()){
         if (!end && !stall){
@@ -62,6 +62,13 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
             if (!stall){
                 if (type == Request::Type::READ) reads++;
                 else if (type == Request::Type::WRITE) writes++;
+                else if (type == Request::Type::GWRITE) gwrite++;
+                else if (type == Request::Type::G_ACT0) gact0++;
+                else if (type == Request::Type::G_ACT1) gact1++;
+                else if (type == Request::Type::G_ACT2) gact2++;
+                else if (type == Request::Type::G_ACT3) gact3++;
+                else if (type == Request::Type::COMP) comp++;
+                else if (type == Request::Type::READRES) readres++;
             }
         }
         else {
@@ -74,6 +81,7 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
         Stats::curTick++; // memory clock, global, for Statistics
     }
     // This a workaround for statistics set only initially lost in the end
+    std::cout<<"GWRITE : "<<gwrite<<std::endl;
     memory.finish();
     Stats::statlist.printall();
 
@@ -266,9 +274,6 @@ int main(int argc, const char *argv[])
     } else if (standard == "ALDRAM") {
       ALDRAM* aldram = new ALDRAM(configs["org"], configs["speed"]);
       start_run(configs, aldram, files);
-    } else if (standard == "TLDRAM") {
-      TLDRAM* tldram = new TLDRAM(configs["org"], configs["speed"], configs.get_subarrays());
-      start_run(configs, tldram, files);
     }
 
     printf("Simulation done. Statistics written to %s\n", stats_out.c_str());
