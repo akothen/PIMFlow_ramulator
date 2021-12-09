@@ -37,6 +37,22 @@ public:
         MAX
     } type;
 
+    string type_name[int(Type::MAX)] = {
+        "READ",
+        "WRITE",
+        "REFRESH",
+        "POWERDOWN",
+        "SELFREFRESH",
+        "GWRITE", 
+        "G_ACT0", 
+        "G_ACT1", 
+        "G_ACT2", 
+        "G_ACT3", 
+        "COMP", 
+        "READRES",
+        "EXTENSION"
+    };
+
     long arrive = -1;
     long depart = -1;
     function<void(Request&)> callback; // call back with more info

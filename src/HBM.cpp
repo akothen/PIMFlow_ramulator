@@ -30,7 +30,7 @@ HBM::HBM(Org org, Speed speed)
     : org_entry(org_table[int(org)]),
     speed_entry(speed_table[int(speed)]),
     read_latency(speed_entry.nCL + speed_entry.nBL),
-    readres_latency(speed_entry.nCL)
+    readres_latency(speed_entry.nCL + speed_entry.nBL)
 {
     init_speed();
     init_prereq();
@@ -200,7 +200,7 @@ void HBM::init_lambda()
                 bank->state = State::Closed;
                 bank->row_state.clear();
             }};
-    lambda[int(Level::Rank)][int(Command::REF)] = [] (DRAM<HBM>* node, int id) {};
+    lambda[int(Level::Rank)][int(Command::REF)] = [] (DRAM<HBM>* node, int id) {std::cout<<"REF"<<std::endl;};
     lambda[int(Level::Bank)][int(Command::RD)] = [] (DRAM<HBM>* node, int id) {};
     lambda[int(Level::Bank)][int(Command::WR)] = [] (DRAM<HBM>* node, int id) {};
     lambda[int(Level::Bank)][int(Command::RDA)] = [] (DRAM<HBM>* node, int id) {
@@ -234,14 +234,16 @@ void HBM::init_lambda()
             if (bank->state == State::Closed) {
                 bank->state = State::Opened;
                 bank->row_state[id] = State::Opened;
+                std::cout<<"G_ACT of bankgroup id : "<<node->id<<" bank id : "<<bank->id<<", row : "<<id<<std::endl;
             }
-        }};
+        }
+    };
     lambda[int(Level::BankGroup)][int(Command::G_ACT1)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
     lambda[int(Level::BankGroup)][int(Command::G_ACT2)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
     lambda[int(Level::BankGroup)][int(Command::G_ACT3)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
-    lambda[int(Level::Rank)][int(Command::COMP)] = [] (DRAM<HBM>* node, int id) {};
-    lambda[int(Level::Rank)][int(Command::GWRITE)] = [] (DRAM<HBM>* node, int id) {};
-    lambda[int(Level::Rank)][int(Command::READRES)] = [] (DRAM<HBM>* node, int id) {};
+    lambda[int(Level::Rank)][int(Command::COMP)] = [] (DRAM<HBM>* node, int id) {std::cout<<"COMP"<<std::endl;};
+    lambda[int(Level::Rank)][int(Command::GWRITE)] = [] (DRAM<HBM>* node, int id) {std::cout<<"GWRITE"<<std::endl;};
+    lambda[int(Level::Rank)][int(Command::READRES)] = [] (DRAM<HBM>* node, int id) {std::cout<<"READRES"<<std::endl;};
 
 }
 
@@ -347,6 +349,7 @@ void HBM::init_timing()
 
     //for Newton GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, READRES
     t[int(Command::GWRITE)].push_back({Command::G_ACT0, 1, s.nCCDS*32});
+    t[int(Command::GWRITE)].push_back({Command::PREA, 1, s.nCCDS*32}); 
     t[int(Command::PREA)].push_back({Command::G_ACT0, 1, s.nRP});
     t[int(Command::G_ACT0)].push_back({Command::G_ACT1, 1, s.nFAW});
     t[int(Command::G_ACT1)].push_back({Command::G_ACT2, 1, s.nFAW});
@@ -355,7 +358,9 @@ void HBM::init_timing()
     t[int(Command::COMP)].push_back({Command::COMP, 1, s.nCCDS});
     t[int(Command::COMP)].push_back({Command::READRES, 1, s.nCCDS*6});
     t[int(Command::READRES)].push_back({Command::PREA, 1, s.nCL});
+    t[int(Command::READRES)].push_back({Command::G_ACT0, 1, s.nCL});
     t[int(Command::READRES)].push_back({Command::GWRITE, 1, s.nCL});
+    t[int(Command::REF)].push_back({Command::G_ACT0, 1, s.nRFC});
 
     /*** Bank Group ***/
     t = timing[int(Level::BankGroup)];

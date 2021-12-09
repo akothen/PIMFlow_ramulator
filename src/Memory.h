@@ -18,6 +18,7 @@
 #include <cmath>
 #include <cassert>
 #include <tuple>
+#include <bitset>
 
 using namespace std;
 
@@ -78,7 +79,7 @@ public:
         ChRaBaRoCo,
         RoBaRaCoCh,
         MAX,
-    } type = Type::RoBaRaCoCh;
+    } type = Type::ChRaBaRoCo;
 
     enum class Translation {
       None,
@@ -138,10 +139,12 @@ public:
 
         for (unsigned int lev = 0; lev < addr_bits.size(); lev++) {
           addr_bits[lev] = calc_log2(sz[lev]);
+          std::cout<<"addr_bits original at "<<lev<<", "<<addr_bits[lev]<<std::endl;
             max_address *= sz[lev];
         }
 
         addr_bits[int(T::Level::MAX) - 1] -= calc_log2(spec->prefetch_size);
+        std::cout<<"addr_bits at "<<int(T::Level::MAX) - 1<<", "<<addr_bits[int(T::Level::MAX) - 1]<<std::endl;
 
         // Initiating translation
         if (configs.contains("translation")) {
@@ -285,7 +288,7 @@ public:
         int cur_que_readreq_num = 0;
         int cur_que_writereq_num = 0;
         for (auto ctrl : ctrls) {
-          cur_que_req_num += ctrl->readq.size() + ctrl->writeq.size() + ctrl->pending.size();
+          cur_que_req_num += ctrl->readq.size() + ctrl->writeq.size() + ctrl->pending.size() + ctrl->pimq.size();
           cur_que_readreq_num += ctrl->readq.size() + ctrl->pending.size();
           cur_que_writereq_num += ctrl->writeq.size();
         }
@@ -490,7 +493,7 @@ public:
     {
         int reqs = 0;
         for (auto ctrl: ctrls)
-            reqs += ctrl->readq.size() + ctrl->writeq.size() + ctrl->otherq.size() + ctrl->actq.size() + ctrl->pending.size();
+            reqs += ctrl->readq.size() + ctrl->writeq.size() + ctrl->otherq.size() + ctrl->actq.size() + ctrl->pending.size() + ctrl->pimq.size();
         return reqs;
     }
 

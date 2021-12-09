@@ -54,7 +54,7 @@ void Controller<ALDRAM>::update_temp(ALDRAM::Temp current_temperature){
 template<>
 void Controller<HBM>::tick() {
     clk++;
-    req_queue_length_sum += readq.size() + writeq.size() + pending.size();
+    req_queue_length_sum += readq.size() + writeq.size() + pending.size() + pimq.size();
     read_req_queue_length_sum += readq.size() + pending.size();
     write_req_queue_length_sum += writeq.size();
 
@@ -69,7 +69,8 @@ void Controller<HBM>::tick() {
                     req.addr_vec.data(), -1, clk);
             }
             */
-            req.callback(req);
+            //req.callback(req);
+            std::cout<<"pending depart at clk : "<<clk<<", "<<req.type_name[int(req.type)]<<std::endl;
             pending.pop_front();
         }
     }
@@ -113,6 +114,9 @@ void Controller<HBM>::tick() {
             queue = &otherq;  // "other" requests are rare, so we give them precedence over reads/writes
         */
         //refresh scheduling for Newton
+        if (refresh_mode) {
+            std::cout<<"refresh queue size : "<<otherq.size()<<std::endl;
+        }
         if (refresh_mode && !otherq.size())
             refresh_mode = false;
         queue = !refresh_mode? &pimq : &otherq;
@@ -181,25 +185,28 @@ void Controller<HBM>::tick() {
     // issue command on behalf of request
     issue_cmd(cmd, get_addr_vec(cmd, req));
 
+    if (cmd == HBM::Command::PREA)
+        num_prea += 1;
+    if (cmd == HBM::Command::PRE)
+        num_pre += 1;
+    if (cmd == HBM::Command::REF)
+        num_ref += 1;
+
     // check whether this is the last command (which finishes the request)
     //if (cmd != channel->spec->translate[int(req->type)]){
-    /*
+    
     if (cmd != channel->spec->translate[int(req->type)]) {
-        if(channel->spec->is_opening(cmd)) {
-            // promote the request that caused issuing activation to actq
-            actq.q.push_back(*req);
-            queue->q.erase(req);
-        }
-
         return;
     }
-    */
 
     //for Newton
     if (cmd == HBM::Command::READRES) {
         //if issue READRES, turn on refresh_mode
         assert(!refresh_mode);
         refresh_mode = true;
+        assert(req->type == Request::Type::READRES);
+        req->depart = clk + channel->spec->readres_latency;
+        pending.push_back(*req);
     }
 
     // set a future completion time for read requests

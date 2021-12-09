@@ -57,6 +57,10 @@ protected:
     ScalarStat write_req_queue_length_avg;
     ScalarStat write_req_queue_length_sum;
 
+    long num_prea;
+    long num_pre;
+    long num_ref;
+
 #ifndef INTEGRATED_WITH_GEM5
     VectorStat record_read_hits;
     VectorStat record_read_misses;
@@ -130,6 +134,11 @@ public:
             for (unsigned int i = 0; i < channel->children.size(); i++)
                 cmd_trace_files[i].open(prefix + to_string(i) + suffix);
         }
+
+
+        num_prea = 0;
+        num_pre = 0;
+        num_ref = 0;
 
         // regStats
 
@@ -306,6 +315,13 @@ public:
       write_req_queue_length_avg = write_req_queue_length_sum.value() / dram_cycles;
       // call finish function of each channel
       channel->finish(dram_cycles);
+      std::cout<<"===================================================================="<<std::endl;
+      std::cout<<"                         Command count"<<std::endl;
+      std::cout<<"===================================================================="<<std::endl;
+      std::cout<<"PREA "<<num_prea<<std::endl;
+      std::cout<<"PRE "<<num_pre<<std::endl;
+      std::cout<<"REF "<<num_ref<<std::endl;
+      std::cout<<"===================================================================="<<std::endl;
     }
 
     /* Member Functions */
@@ -350,7 +366,7 @@ public:
     void tick()
     {
         clk++;
-        req_queue_length_sum += readq.size() + writeq.size() + pending.size();
+        req_queue_length_sum += readq.size() + writeq.size() + pending.size() + pimq.size();
         read_req_queue_length_sum += readq.size() + pending.size();
         write_req_queue_length_sum += writeq.size();
 

@@ -459,6 +459,12 @@ bool Trace::get_dramtrace_request(long& req_addr, Request::Type& req_type)
     if (file.eof()) {
         return false;
     }
+    
+    if (line.substr(0, 7) == "READRES") {
+      req_type = Request::Type::READRES;
+      return true;
+    }
+
     size_t pos;
     req_addr = std::stoul(line, &pos, 16);
 
@@ -480,8 +486,6 @@ bool Trace::get_dramtrace_request(long& req_addr, Request::Type& req_type)
         req_type = Request::Type::G_ACT3;
     else if (line.substr(pos) == "COMP")
         req_type = Request::Type::COMP;
-    else if (line.substr(pos) == "READRES")
-        req_type = Request::Type::READRES;
     else assert(false);
     return true;
 }
