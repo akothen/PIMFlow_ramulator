@@ -60,6 +60,10 @@ protected:
     long num_prea;
     long num_pre;
     long num_ref;
+    long num_gwrite;
+    long num_gact;
+    long num_comp;
+    long num_readres;
 
 #ifndef INTEGRATED_WITH_GEM5
     VectorStat record_read_hits;
@@ -139,6 +143,10 @@ public:
         num_prea = 0;
         num_pre = 0;
         num_ref = 0;
+        num_gwrite = 0;
+        num_gact = 0;
+        num_comp = 0;
+        num_readres = 0;
 
         // regStats
 
@@ -318,9 +326,17 @@ public:
       std::cout<<"===================================================================="<<std::endl;
       std::cout<<"                         Command count"<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
+      std::cout<<"GWRITE "<<num_gwrite<<std::endl;
+      std::cout<<"G_ACT "<<num_gact<<std::endl;
+      std::cout<<"COMP "<<num_comp<<std::endl;
+      std::cout<<"READRES "<<num_readres<<std::endl;
       std::cout<<"PREA "<<num_prea<<std::endl;
       std::cout<<"PRE "<<num_pre<<std::endl;
       std::cout<<"REF "<<num_ref<<std::endl;
+      std::cout<<"===================================================================="<<std::endl;
+      std::cout<<"                              Cycle"<<std::endl;
+      std::cout<<"===================================================================="<<std::endl;
+      std::cout<<"Cycle "<<clk<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
     }
 

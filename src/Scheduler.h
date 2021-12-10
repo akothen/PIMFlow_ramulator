@@ -301,7 +301,7 @@ public:
                 int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
                 for (int i = 0; i < 4; i++) {
                     rowgroup[int(T::Level::Bank)] = i;
-                    std::cout<<"G_ACT with Bankgroup : "<<BG<<" Bank : "<<rowgroup[int(T::Level::Bank)]<<std::endl;
+                    //std::cout<<"G_ACT with Bankgroup : "<<BG<<" Bank : "<<rowgroup[int(T::Level::Bank)]<<std::endl;
                     table.insert({rowgroup, {row, 0, clk}});
                 }
             }

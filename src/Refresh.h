@@ -104,7 +104,6 @@ private:
     addr_vec[3] = sa;
     Request req(addr_vec, Request::Type::REFRESH, NULL);
     bool res = ctrl->enqueue(req);
-    std::cout<<"inject refresh"<<std::endl;
     assert(res);
   }
 

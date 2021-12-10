@@ -70,7 +70,7 @@ void Controller<HBM>::tick() {
             }
             */
             //req.callback(req);
-            std::cout<<"pending depart at clk : "<<clk<<", "<<req.type_name[int(req.type)]<<std::endl;
+            std::cout<<"at clk : "<<clk<<", "<<req.type_name[int(req.type)]<<" depart (host can see READRES data)"<<std::endl;
             pending.pop_front();
         }
     }
@@ -115,7 +115,7 @@ void Controller<HBM>::tick() {
         */
         //refresh scheduling for Newton
         if (refresh_mode) {
-            std::cout<<"refresh queue size : "<<otherq.size()<<std::endl;
+            //std::cout<<"refresh queue size : "<<otherq.size()<<std::endl;
         }
         if (refresh_mode && !otherq.size())
             refresh_mode = false;
@@ -191,6 +191,15 @@ void Controller<HBM>::tick() {
         num_pre += 1;
     if (cmd == HBM::Command::REF)
         num_ref += 1;
+    if (cmd == HBM::Command::GWRITE)
+        num_gwrite += 1;
+    if (cmd == HBM::Command::G_ACT0 || cmd == HBM::Command::G_ACT1 
+        || cmd == HBM::Command::G_ACT2 || cmd == HBM::Command::G_ACT3)
+        num_gact += 1;
+    if (cmd == HBM::Command::COMP)
+        num_comp += 1;
+    if (cmd == HBM::Command::READRES)
+        num_readres += 1;
 
     // check whether this is the last command (which finishes the request)
     //if (cmd != channel->spec->translate[int(req->type)]){

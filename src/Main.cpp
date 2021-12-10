@@ -81,6 +81,7 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
         Stats::curTick++; // memory clock, global, for Statistics
     }
     // This a workaround for statistics set only initially lost in the end
+    /*
     std::cout<<"===================================================================="<<std::endl;
     std::cout<<"                         Request count"<<std::endl;
     std::cout<<"===================================================================="<<std::endl;
@@ -92,6 +93,7 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
     std::cout<<"COMP : "<<comp<<std::endl;
     std::cout<<"READRES : "<<readres<<std::endl;
     std::cout<<"===================================================================="<<std::endl;
+    */
     memory.finish();
     Stats::statlist.printall();
 
@@ -172,7 +174,7 @@ template<typename T>
 void start_run(const Config& configs, T* spec, const vector<const char*>& files) {
   // initiate controller and memory
   int C = configs.get_channels(), R = configs.get_ranks();
-  std::cout<<"channel : "<<C<<", rank : "<<R<<std::endl;
+  //std::cout<<"channel : "<<C<<", rank : "<<R<<std::endl;
   // Check and Set channel, rank number
   spec->set_channel_number(C);
   spec->set_rank_number(R);

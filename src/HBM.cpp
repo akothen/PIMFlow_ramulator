@@ -200,7 +200,7 @@ void HBM::init_lambda()
                 bank->state = State::Closed;
                 bank->row_state.clear();
             }};
-    lambda[int(Level::Rank)][int(Command::REF)] = [] (DRAM<HBM>* node, int id) {std::cout<<"REF"<<std::endl;};
+    lambda[int(Level::Rank)][int(Command::REF)] = [] (DRAM<HBM>* node, int id) {/*std::cout<<"REF"<<std::endl;*/};
     lambda[int(Level::Bank)][int(Command::RD)] = [] (DRAM<HBM>* node, int id) {};
     lambda[int(Level::Bank)][int(Command::WR)] = [] (DRAM<HBM>* node, int id) {};
     lambda[int(Level::Bank)][int(Command::RDA)] = [] (DRAM<HBM>* node, int id) {
@@ -234,16 +234,16 @@ void HBM::init_lambda()
             if (bank->state == State::Closed) {
                 bank->state = State::Opened;
                 bank->row_state[id] = State::Opened;
-                std::cout<<"G_ACT of bankgroup id : "<<node->id<<" bank id : "<<bank->id<<", row : "<<id<<std::endl;
+                //std::cout<<"G_ACT of bankgroup id : "<<node->id<<" bank id : "<<bank->id<<", row : "<<id<<std::endl;
             }
         }
     };
     lambda[int(Level::BankGroup)][int(Command::G_ACT1)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
     lambda[int(Level::BankGroup)][int(Command::G_ACT2)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
     lambda[int(Level::BankGroup)][int(Command::G_ACT3)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
-    lambda[int(Level::Rank)][int(Command::COMP)] = [] (DRAM<HBM>* node, int id) {std::cout<<"COMP"<<std::endl;};
-    lambda[int(Level::Rank)][int(Command::GWRITE)] = [] (DRAM<HBM>* node, int id) {std::cout<<"GWRITE"<<std::endl;};
-    lambda[int(Level::Rank)][int(Command::READRES)] = [] (DRAM<HBM>* node, int id) {std::cout<<"READRES"<<std::endl;};
+    lambda[int(Level::Rank)][int(Command::COMP)] = [] (DRAM<HBM>* node, int id) {/*std::cout<<"COMP"<<std::endl;*/};
+    lambda[int(Level::Rank)][int(Command::GWRITE)] = [] (DRAM<HBM>* node, int id) {/*std::cout<<"GWRITE"<<std::endl;*/};
+    lambda[int(Level::Rank)][int(Command::READRES)] = [] (DRAM<HBM>* node, int id) {/*std::cout<<"READRES"<<std::endl;*/};
 
 }
 

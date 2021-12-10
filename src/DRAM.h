@@ -218,7 +218,7 @@ DRAM<T>::DRAM(T* spec, typename T::Level level) :
         return; // stop recursion: the number of children is unspecified
 
     // recursively construct my children
-    std::cout<<"child_max : "<<child_max<<std::endl;
+    //std::cout<<"child_max : "<<child_max<<std::endl;
     for (int i = 0; i < child_max; i++) {
         DRAM<T>* child = new DRAM<T>(spec, typename T::Level(child_level));
         child->parent = this;
@@ -327,7 +327,7 @@ template <typename T>
 void DRAM<T>::update(typename T::Command cmd, const int* addr, long clk)
 {
     cur_clk = clk;
-    std::cout<<"at clk : "<<clk<<", update state and timing with cmd : "<<spec->command_name[int(cmd)]<<std::endl;
+    std::cout<<"at clk : "<<clk<<", issue cmd : "<<spec->command_name[int(cmd)]<<std::endl;
     update_state(cmd, addr);
     update_timing(cmd, addr, clk);
 }
@@ -339,7 +339,7 @@ void DRAM<T>::update_state(typename T::Command cmd, const int* addr)
 {
     int child_id = addr[int(level)+1];
 
-    std::cout<<"at level : "<<spec->level_str[int(level)]<<", current id : "<<id<<", child_id : "<<child_id<<std::endl;
+    //std::cout<<"at level : "<<spec->level_str[int(level)]<<", current id : "<<id<<", child_id : "<<child_id<<std::endl;
     //for Newton
     if (lambda[int(cmd)]) {
         if (spec->is_BG(level) && 

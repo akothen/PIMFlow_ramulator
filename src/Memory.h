@@ -139,12 +139,10 @@ public:
 
         for (unsigned int lev = 0; lev < addr_bits.size(); lev++) {
           addr_bits[lev] = calc_log2(sz[lev]);
-          std::cout<<"addr_bits original at "<<lev<<", "<<addr_bits[lev]<<std::endl;
             max_address *= sz[lev];
         }
 
         addr_bits[int(T::Level::MAX) - 1] -= calc_log2(spec->prefetch_size);
-        std::cout<<"addr_bits at "<<int(T::Level::MAX) - 1<<", "<<addr_bits[int(T::Level::MAX) - 1]<<std::endl;
 
         // Initiating translation
         if (configs.contains("translation")) {
