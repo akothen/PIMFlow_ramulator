@@ -3,6 +3,11 @@ In file included from src/Controller.h:16:
 src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
                 int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
                     ^
+In file included from src/Controller.cpp:1:
+In file included from src/Controller.h:16:
+src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
+                int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
+                    ^
 In file included from src/MemoryFactory.cpp:1:
 In file included from src/MemoryFactory.h:9:
 In file included from src/Memory.h:7:
@@ -13,11 +18,6 @@ src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
 In file included from src/Processor.cpp:1:
 In file included from src/Processor.h:6:
 In file included from src/Memory.h:7:
-In file included from src/Controller.h:16:
-src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
-                int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
-                    ^
-In file included from src/Controller.cpp:1:
 In file included from src/Controller.h:16:
 src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
                 int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
