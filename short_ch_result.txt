@@ -1,0 +1,127 @@
+at clk : 1, issue cmd : GWRITE
+at clk : 65, issue cmd : G_ACT0
+at clk : 85, issue cmd : G_ACT1
+at clk : 92, issue cmd : COMP
+at clk : 95, issue cmd : COMP
+at clk : 98, issue cmd : COMP
+at clk : 101, issue cmd : COMP
+at clk : 104, issue cmd : COMP
+at clk : 107, issue cmd : COMP
+at clk : 110, issue cmd : COMP
+at clk : 113, issue cmd : COMP
+at clk : 116, issue cmd : COMP
+at clk : 119, issue cmd : COMP
+at clk : 122, issue cmd : COMP
+at clk : 125, issue cmd : COMP
+at clk : 128, issue cmd : COMP
+at clk : 131, issue cmd : COMP
+at clk : 134, issue cmd : COMP
+at clk : 137, issue cmd : COMP
+at clk : 140, issue cmd : COMP
+at clk : 143, issue cmd : COMP
+at clk : 146, issue cmd : COMP
+at clk : 149, issue cmd : COMP
+at clk : 152, issue cmd : COMP
+at clk : 155, issue cmd : COMP
+at clk : 158, issue cmd : COMP
+at clk : 161, issue cmd : COMP
+at clk : 164, issue cmd : COMP
+at clk : 167, issue cmd : COMP
+at clk : 170, issue cmd : COMP
+at clk : 173, issue cmd : COMP
+at clk : 176, issue cmd : COMP
+at clk : 179, issue cmd : COMP
+at clk : 182, issue cmd : COMP
+at clk : 185, issue cmd : COMP
+at clk : 203, issue cmd : READRES
+at clk : 210, issue cmd : PREA
+at clk : 212, READRES depart (host can see READRES data)
+at clk : 217, issue cmd : G_ACT0
+at clk : 237, issue cmd : G_ACT1
+at clk : 244, issue cmd : COMP
+at clk : 247, issue cmd : COMP
+at clk : 250, issue cmd : COMP
+at clk : 253, issue cmd : COMP
+at clk : 256, issue cmd : COMP
+at clk : 259, issue cmd : COMP
+at clk : 262, issue cmd : COMP
+at clk : 265, issue cmd : COMP
+at clk : 268, issue cmd : COMP
+at clk : 271, issue cmd : COMP
+at clk : 274, issue cmd : COMP
+at clk : 277, issue cmd : COMP
+at clk : 280, issue cmd : COMP
+at clk : 283, issue cmd : COMP
+at clk : 286, issue cmd : COMP
+at clk : 289, issue cmd : COMP
+at clk : 292, issue cmd : COMP
+at clk : 295, issue cmd : COMP
+at clk : 298, issue cmd : COMP
+at clk : 301, issue cmd : COMP
+at clk : 304, issue cmd : COMP
+at clk : 307, issue cmd : COMP
+at clk : 310, issue cmd : COMP
+at clk : 313, issue cmd : COMP
+at clk : 316, issue cmd : COMP
+at clk : 319, issue cmd : COMP
+at clk : 322, issue cmd : COMP
+at clk : 325, issue cmd : COMP
+at clk : 328, issue cmd : COMP
+at clk : 331, issue cmd : COMP
+at clk : 334, issue cmd : COMP
+at clk : 337, issue cmd : COMP
+at clk : 355, issue cmd : READRES
+at clk : 362, issue cmd : PREA
+at clk : 364, READRES depart (host can see READRES data)
+at clk : 369, issue cmd : G_ACT0
+at clk : 389, issue cmd : G_ACT1
+at clk : 396, issue cmd : COMP
+at clk : 399, issue cmd : COMP
+at clk : 402, issue cmd : COMP
+at clk : 405, issue cmd : COMP
+at clk : 408, issue cmd : COMP
+at clk : 411, issue cmd : COMP
+at clk : 414, issue cmd : COMP
+at clk : 417, issue cmd : COMP
+at clk : 420, issue cmd : COMP
+at clk : 423, issue cmd : COMP
+at clk : 426, issue cmd : COMP
+at clk : 429, issue cmd : COMP
+at clk : 432, issue cmd : COMP
+at clk : 435, issue cmd : COMP
+at clk : 438, issue cmd : COMP
+at clk : 441, issue cmd : COMP
+at clk : 444, issue cmd : COMP
+at clk : 447, issue cmd : COMP
+at clk : 450, issue cmd : COMP
+at clk : 453, issue cmd : COMP
+at clk : 456, issue cmd : COMP
+at clk : 459, issue cmd : COMP
+at clk : 462, issue cmd : COMP
+at clk : 465, issue cmd : COMP
+at clk : 468, issue cmd : COMP
+at clk : 471, issue cmd : COMP
+at clk : 474, issue cmd : COMP
+at clk : 477, issue cmd : COMP
+at clk : 480, issue cmd : COMP
+at clk : 483, issue cmd : COMP
+at clk : 486, issue cmd : COMP
+at clk : 489, issue cmd : COMP
+at clk : 507, issue cmd : READRES
+at clk : 516, READRES depart (host can see READRES data)
+====================================================================
+                         Command count
+====================================================================
+GWRITE 1
+G_ACT 6
+COMP 96
+READRES 3
+PREA 2
+PRE 0
+REF 0
+====================================================================
+                              Cycle
+====================================================================
+Cycle 516
+====================================================================
+Simulation done. Statistics written to HBM.stats

@@ -354,6 +354,9 @@ void HBM::init_timing()
     t[int(Command::G_ACT0)].push_back({Command::G_ACT1, 1, s.nFAW});
     t[int(Command::G_ACT1)].push_back({Command::G_ACT2, 1, s.nFAW});
     t[int(Command::G_ACT2)].push_back({Command::G_ACT3, 1, s.nFAW});
+    t[int(Command::G_ACT0)].push_back({Command::COMP, 1, s.nRCDR});
+    t[int(Command::G_ACT1)].push_back({Command::COMP, 1, s.nRCDR});
+    t[int(Command::G_ACT2)].push_back({Command::COMP, 1, s.nRCDR});
     t[int(Command::G_ACT3)].push_back({Command::COMP, 1, s.nRCDR});
     t[int(Command::COMP)].push_back({Command::COMP, 1, s.nCCDS});
     t[int(Command::COMP)].push_back({Command::READRES, 1, s.nCCDS*6});
