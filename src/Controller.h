@@ -332,7 +332,7 @@ public:
       double read_energy = 2.00968e-9;//dram per read energy
       double write_energy = 1.11519e-9;//dram per write energy
       double fp16_mul_array_energy = 1.1e-12 * 16; //this is for Newton
-      double comp_energy = (read_energy + adder_tree_15_energy) * 16;//comp -> read and do adder-tree in each bank
+      double comp_energy = (fp16_mul_array_energy + read_energy + adder_tree_15_energy) * 16;//comp -> read and do adder-tree in each bank
 
       double total_comp_energy = comp_energy * num_comp;
       double total_pre_energy = num_prea * pre_energy * 16 + num_pre * pre_energy;
@@ -349,12 +349,12 @@ public:
       std::cout<<"PRE "<<num_pre<<std::endl;
       std::cout<<"REF "<<num_ref<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
-      std::cout<<"                              Cycle"<<std::endl;
+      std::cout<<"                              CYCLE (nclk)"<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
       std::cout<<"Cycle "<<clk<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
-      std::cout<<"                              Energy (J)"<<std::endl;
+      std::cout<<"                              ENERGY (J)"<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
       std::cout<<"COMP energy "<<total_comp_energy<<std::endl;
       std::cout<<"GWRITE energy "<<total_gwrite_energy<<std::endl;
