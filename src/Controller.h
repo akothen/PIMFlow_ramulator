@@ -323,6 +323,21 @@ public:
       write_req_queue_length_avg = write_req_queue_length_sum.value() / dram_cycles;
       // call finish function of each channel
       channel->finish(dram_cycles);
+
+      //per access energy [J]
+      double pre_energy = 3.32694e-10;
+      double preg_energy = pre_energy * 4;
+      double adder_tree_15_energy = 1.32824e-10; //adder-tree energy - 15 add
+      double adder_tree_6_energy = 5.31296e-11; //adder-tree energy - 6 add
+      double read_energy = 2.00968e-9;//dram per read energy
+      double write_energy = 1.11519e-9;//dram per write energy
+      double fp16_mul_array_energy = 1.1e-12 * 16; //this is for Newton
+      double comp_energy = (read_energy + adder_tree_15_energy) * 16;//comp -> read and do adder-tree in each bank
+
+      double total_comp_energy = comp_energy * num_comp;
+      double total_pre_energy = num_prea * pre_energy * 16 + num_pre * pre_energy;
+      double total_readres_energy = num_readres * read_energy;
+      double total_gwrite_energy = num_gwrite * write_energy;
       std::cout<<"===================================================================="<<std::endl;
       std::cout<<"                         Command count"<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
@@ -337,6 +352,15 @@ public:
       std::cout<<"                              Cycle"<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
       std::cout<<"Cycle "<<clk<<std::endl;
+      std::cout<<"===================================================================="<<std::endl;
+      std::cout<<"===================================================================="<<std::endl;
+      std::cout<<"                              Energy (J)"<<std::endl;
+      std::cout<<"===================================================================="<<std::endl;
+      std::cout<<"COMP energy "<<total_comp_energy<<std::endl;
+      std::cout<<"GWRITE energy "<<total_gwrite_energy<<std::endl;
+      std::cout<<"READRES energy "<<total_readres_energy<<std::endl;
+      std::cout<<"PRE energy "<<total_pre_energy<<std::endl;
+      std::cout<<"Total energy "<<total_comp_energy+total_gwrite_energy+total_pre_energy+total_readres_energy<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
     }
 

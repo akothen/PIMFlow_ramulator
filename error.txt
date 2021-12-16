@@ -3,6 +3,11 @@ In file included from src/Controller.h:16:
 src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
                 int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
                     ^
+In file included from src/Refresh.cpp:13:
+In file included from src/Controller.h:16:
+src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
+                int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
+                    ^
 In file included from src/MemoryFactory.cpp:1:
 In file included from src/MemoryFactory.h:9:
 In file included from src/Memory.h:7:
@@ -10,11 +15,26 @@ In file included from src/Controller.h:16:
 src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
                 int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
                     ^
+In file included from src/Controller.cpp:1:
+src/Controller.h:329:14: warning: unused variable 'preg_energy' [-Wunused-variable]
+      double preg_energy = pre_energy * 4;
+             ^
+src/Controller.h:331:14: warning: unused variable 'adder_tree_6_energy' [-Wunused-variable]
+      double adder_tree_6_energy = 5.31296e-11; //adder-tree energy - 6 add
+             ^
+src/Controller.h:334:14: warning: unused variable 'fp16_mul_array_energy' [-Wunused-variable]
+      double fp16_mul_array_energy = 1.1e-12 * 16; //this is for Newton
+             ^
 In file included from src/Refresh.cpp:13:
-In file included from src/Controller.h:16:
-src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
-                int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
-                    ^
+src/Controller.h:329:14: warning: unused variable 'preg_energy' [-Wunused-variable]
+      double preg_energy = pre_energy * 4;
+             ^
+src/Controller.h:331:14: warning: unused variable 'adder_tree_6_energy' [-Wunused-variable]
+      double adder_tree_6_energy = 5.31296e-11; //adder-tree energy - 6 add
+             ^
+src/Controller.h:334:14: warning: unused variable 'fp16_mul_array_energy' [-Wunused-variable]
+      double fp16_mul_array_energy = 1.1e-12 * 16; //this is for Newton
+             ^
 In file included from src/Processor.cpp:1:
 In file included from src/Processor.h:6:
 In file included from src/Memory.h:7:
@@ -22,10 +42,34 @@ In file included from src/Controller.h:16:
 src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
                 int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
                     ^
-1 warning generated.
-1 warning generated.
-1 warning generated.
-1 warning generated.
+In file included from src/MemoryFactory.cpp:1:
+In file included from src/MemoryFactory.h:9:
+In file included from src/Memory.h:7:
+src/Controller.h:329:14: warning: unused variable 'preg_energy' [-Wunused-variable]
+      double preg_energy = pre_energy * 4;
+             ^
+src/Controller.h:331:14: warning: unused variable 'adder_tree_6_energy' [-Wunused-variable]
+      double adder_tree_6_energy = 5.31296e-11; //adder-tree energy - 6 add
+             ^
+src/Controller.h:334:14: warning: unused variable 'fp16_mul_array_energy' [-Wunused-variable]
+      double fp16_mul_array_energy = 1.1e-12 * 16; //this is for Newton
+             ^
+In file included from src/Processor.cpp:1:
+In file included from src/Processor.h:6:
+In file included from src/Memory.h:7:
+src/Controller.h:329:14: warning: unused variable 'preg_energy' [-Wunused-variable]
+      double preg_energy = pre_energy * 4;
+             ^
+src/Controller.h:331:14: warning: unused variable 'adder_tree_6_energy' [-Wunused-variable]
+      double adder_tree_6_energy = 5.31296e-11; //adder-tree energy - 6 add
+             ^
+src/Controller.h:334:14: warning: unused variable 'fp16_mul_array_energy' [-Wunused-variable]
+      double fp16_mul_array_energy = 1.1e-12 * 16; //this is for Newton
+             ^
+4 warnings generated.
+4 warnings generated.
+4 warnings generated.
+4 warnings generated.
 In file included from src/Main.cpp:1:
 In file included from src/Processor.h:6:
 In file included from src/Memory.h:7:
@@ -33,6 +77,18 @@ In file included from src/Controller.h:16:
 src/Scheduler.h:301:21: warning: unused variable 'BG' [-Wunused-variable]
                 int BG = rowgroup[int(T::Level::Rank)+1]; //Rank + 1 is BankGroup
                     ^
+In file included from src/Main.cpp:1:
+In file included from src/Processor.h:6:
+In file included from src/Memory.h:7:
+src/Controller.h:329:14: warning: unused variable 'preg_energy' [-Wunused-variable]
+      double preg_energy = pre_energy * 4;
+             ^
+src/Controller.h:331:14: warning: unused variable 'adder_tree_6_energy' [-Wunused-variable]
+      double adder_tree_6_energy = 5.31296e-11; //adder-tree energy - 6 add
+             ^
+src/Controller.h:334:14: warning: unused variable 'fp16_mul_array_energy' [-Wunused-variable]
+      double fp16_mul_array_energy = 1.1e-12 * 16; //this is for Newton
+             ^
 src/Main.cpp:48:10: warning: unused variable 'read_complete' [-Wunused-variable]
     auto read_complete = [&latencies](Request& r){latencies[r.depart - r.arrive]++;};
          ^
@@ -150,4 +206,4 @@ src/Main.cpp:195:5: note: in instantiation of function template specialization '
 src/Main.cpp:289:7: note: in instantiation of function template specialization 'start_run<ramulator::ALDRAM>' requested here
       start_run(configs, aldram, files);
       ^
-14 warnings generated.
+17 warnings generated.
