@@ -113,12 +113,18 @@ void Controller<HBM>::tick() {
         if (otherq.size())
             queue = &otherq;  // "other" requests are rare, so we give them precedence over reads/writes
         */
+       std::cout<<"at "<<clk<<", refresh_mode : "<<refresh_mode<<", q : "<<otherq.size()<<", pimq : "<<pimq.size()<<std::endl;
+
         //refresh scheduling for Newton
         if (refresh_mode) {
             //std::cout<<"refresh queue size : "<<otherq.size()<<std::endl;
         }
         if (refresh_mode && !otherq.size())
             refresh_mode = false;
+        
+        if (!pimq.size() && otherq.size() && !refresh_mode)
+            refresh_mode = true;
+        
         queue = !refresh_mode? &pimq : &otherq;
 
         if (refresh_mode)

@@ -348,8 +348,11 @@ void HBM::init_timing()
     t[int(Command::SRX)].push_back({Command::SRE, 1, s.nXS});
 
     //for Newton GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, READRES
-    t[int(Command::GWRITE)].push_back({Command::G_ACT0, 1, s.nCCDS*32});
-    t[int(Command::GWRITE)].push_back({Command::PREA, 1, s.nCCDS*32}); 
+    t[int(Command::GWRITE)].push_back({Command::G_ACT0, 1, (s.nCCDS+s.nCCDL)*32});
+    t[int(Command::GWRITE)].push_back({Command::G_ACT1, 1, (s.nCCDS+s.nCCDL)*32});
+    t[int(Command::GWRITE)].push_back({Command::G_ACT2, 1, (s.nCCDS+s.nCCDL)*32});
+    t[int(Command::GWRITE)].push_back({Command::G_ACT3, 1, (s.nCCDS+s.nCCDL)*32});
+    t[int(Command::GWRITE)].push_back({Command::PREA, 1, (s.nCCDS+s.nCCDL)*32}); 
     t[int(Command::PREA)].push_back({Command::G_ACT0, 1, s.nRP});
     t[int(Command::G_ACT0)].push_back({Command::G_ACT1, 1, s.nFAW});
     t[int(Command::G_ACT1)].push_back({Command::G_ACT2, 1, s.nFAW});
@@ -362,6 +365,9 @@ void HBM::init_timing()
     t[int(Command::COMP)].push_back({Command::READRES, 1, s.nCCDS*6});
     t[int(Command::READRES)].push_back({Command::PREA, 1, s.nCL});
     t[int(Command::READRES)].push_back({Command::G_ACT0, 1, s.nCL});
+    t[int(Command::READRES)].push_back({Command::G_ACT1, 1, s.nCL});
+    t[int(Command::READRES)].push_back({Command::G_ACT2, 1, s.nCL});
+    t[int(Command::READRES)].push_back({Command::G_ACT3, 1, s.nCL});
     t[int(Command::READRES)].push_back({Command::GWRITE, 1, s.nCL});
     t[int(Command::REF)].push_back({Command::G_ACT0, 1, s.nRFC});
 
