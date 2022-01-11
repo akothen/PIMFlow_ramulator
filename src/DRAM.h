@@ -327,7 +327,7 @@ template <typename T>
 void DRAM<T>::update(typename T::Command cmd, const int* addr, long clk)
 {
     cur_clk = clk;
-    std::cout<<"at clk : "<<clk<<", issue cmd : "<<spec->command_name[int(cmd)]<<std::endl;
+    //std::cout<<"at clk : "<<clk<<", issue cmd : "<<spec->command_name[int(cmd)]<<std::endl;
     update_state(cmd, addr);
     update_timing(cmd, addr, clk);
 }

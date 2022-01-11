@@ -70,7 +70,7 @@ void Controller<HBM>::tick() {
             }
             */
             //req.callback(req);
-            std::cout<<"at clk : "<<clk<<", "<<req.type_name[int(req.type)]<<" depart (host can see READRES data)"<<std::endl;
+            //std::cout<<"at clk : "<<clk<<", "<<req.type_name[int(req.type)]<<" depart (host can see READRES data)"<<std::endl;
             pending.pop_front();
         }
     }
@@ -113,7 +113,7 @@ void Controller<HBM>::tick() {
         if (otherq.size())
             queue = &otherq;  // "other" requests are rare, so we give them precedence over reads/writes
         */
-       std::cout<<"at "<<clk<<", refresh_mode : "<<refresh_mode<<", q : "<<otherq.size()<<", pimq : "<<pimq.size()<<std::endl;
+       //std::cout<<"at "<<clk<<", refresh_mode : "<<refresh_mode<<", q : "<<otherq.size()<<", pimq : "<<pimq.size()<<std::endl;
 
         //refresh scheduling for Newton
         if (refresh_mode) {

@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <functional>
 #include <map>
+#include <time.h>
 
 /* Standards */
 #include "Gem5Wrapper.h"
@@ -28,6 +29,8 @@
 #include "STTMRAM.h"
 #include "PCM.h"
 
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
 using namespace std;
 using namespace ramulator;
 
@@ -36,6 +39,7 @@ bool ramulator::warmup_complete = false;
 template<typename T>
 void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const char* tracename) {
 
+    time_t simulation_starttime = time((time_t *)NULL);
     /* initialize DRAM trace */
     Trace trace(tracename);
 
@@ -95,6 +99,22 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
     std::cout<<"===================================================================="<<std::endl;
     */
     memory.finish();
+
+    time_t current_time, difference, d, h, m, s;
+    current_time = time((time_t *)NULL);
+    difference = MAX(current_time - simulation_starttime, 1);
+
+    d = difference / (3600 * 24);
+    h = difference / 3600 - 24 * d;
+    m = difference / 60 - 60 * (h + 24 * d);
+    s = difference - 60 * (m + 60 * (h + 24 * d));
+
+    printf(
+      "\n\nramulator_simulation_time = %u days, %u hrs, %u min, %u sec (%u sec)\n",
+      (unsigned)d, (unsigned)h, (unsigned)m, (unsigned)s, (unsigned)difference);
+    printf("ramulator_simulation_rate = %u (op/sec)\n",
+         (unsigned)((reads + writes + gwrite + gact0 + gact1 + gact2 + gact3 + comp *(16+16)*16 + readres) / difference));
+
     Stats::statlist.printall();
 
 }
