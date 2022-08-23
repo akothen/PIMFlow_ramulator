@@ -325,19 +325,20 @@ public:
       channel->finish(dram_cycles);
 
       //per access energy [J]
-      double pre_energy = 3.32694e-10;
+      double pre_energy = 0.03183e-9;
       double preg_energy = pre_energy * 4;
-      double adder_tree_15_energy = 1.32824e-10; //adder-tree energy - 15 add
-      double adder_tree_6_energy = 5.31296e-11; //adder-tree energy - 6 add
-      double read_energy = 2.00968e-9;//dram per read energy
-      double write_energy = 1.11519e-9;//dram per write energy
+      double sram_read_energy = 0.175814e-9;
+      double sram_write_energy = 0.181995e-9;
+      double read_energy = 1.16822e-9;//dram per read energy
+      //double write_energy = 1.11519e-9;//dram per write energy
       double fp16_mul_array_energy = 1.1e-12 * 16; //this is for Newton
-      double comp_energy = (fp16_mul_array_energy + read_energy + adder_tree_15_energy) * 16;//comp -> read and do adder-tree in each bank
+      double fp16_add_array_energy = 0.4e-12 * 16; //this is for Newton
+      double comp_energy = (fp16_mul_array_energy *32  + sram_read_energy *32 + read_energy + fp16_add_array_energy*32) * 16 ;//comp -> read and do adder-tree in each bank
 
-      double total_comp_energy = comp_energy * num_comp;
+      double total_comp_energy = comp_energy * num_comp/32;
       double total_pre_energy = num_prea * pre_energy * 16 + num_pre * pre_energy;
-      double total_readres_energy = num_readres * read_energy;
-      double total_gwrite_energy = num_gwrite * write_energy;
+      double total_readres_energy = num_readres * sram_read_energy;
+      double total_gwrite_energy = num_gwrite * sram_write_energy;
       std::cout<<"===================================================================="<<std::endl;
       std::cout<<"                         Command count"<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
