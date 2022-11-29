@@ -474,7 +474,7 @@ bool Trace::get_dramtrace_request(long& req_addr, Request::Type& req_type)
         req_type = Request::Type::READ;
     else if (line.substr(pos)[0] == 'W')
         req_type = Request::Type::WRITE;
-    else if (line.substr(pos) == "GWRITE")
+    else if (line.find("GWRITE") != string::npos )
         req_type = Request::Type::GWRITE;
     else if (line.substr(pos) == "G_ACT0")
         req_type = Request::Type::G_ACT0;
