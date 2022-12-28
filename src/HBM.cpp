@@ -4,9 +4,16 @@
 #include <vector>
 #include <functional>
 #include <cassert>
+#include <cstdio>
+#include <cstdlib>
 
 using namespace std;
 using namespace ramulator;
+
+static std::string GetEnvVar(const std::string key) {
+const char* val = getenv(key.c_str());
+return val == NULL ? std::string("") : std::string(val);
+}
 
 string HBM::standard_name = "HBM";
 string HBM::level_str [int(Level::MAX)] = {"Ch", "Ra", "Bg", "Ba", "Ro", "Co"};
@@ -352,11 +359,15 @@ void HBM::init_timing()
     t[int(Command::SRX)].push_back({Command::SRE, 1, s.nXS});
 
     //for Newton GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, READRES
-    t[int(Command::GWRITE)].push_back({Command::GWRITE, 1, 1});
-    t[int(Command::GWRITE)].push_back({Command::G_ACT0, 1, 1});
-    t[int(Command::GWRITE)].push_back({Command::G_ACT1, 1, 1});
-    t[int(Command::GWRITE)].push_back({Command::G_ACT2, 1, 1});
-    t[int(Command::GWRITE)].push_back({Command::G_ACT3, 1, 1});
+    int c = 1;
+    if (!GetEnvVar("RAMULATOR_DISABLE_GWRITE_LATENCY_HIDING").empty()) {
+        c = 32*s.nCCDS;
+    }
+    t[int(Command::GWRITE)].push_back({Command::GWRITE, 1, c});
+    t[int(Command::GWRITE)].push_back({Command::G_ACT0, 1, c});
+    t[int(Command::GWRITE)].push_back({Command::G_ACT1, 1, c});
+    t[int(Command::GWRITE)].push_back({Command::G_ACT2, 1, c});
+    t[int(Command::GWRITE)].push_back({Command::G_ACT3, 1, c});
     // t[int(Command::GWRITE)].push_back({Command::PREA, 1, 1});
     t[int(Command::GWRITE)].push_back({Command::COMP, 1, s.nRC+16});
     t[int(Command::PREA)].push_back({Command::G_ACT0, 1, s.nRP});
