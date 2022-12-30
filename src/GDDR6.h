@@ -209,7 +209,7 @@ public:
         MAX
     };
 
-    int prefetch_size = 8; // 8n prefetch QDR
+    int prefetch_size = 16; // 8n prefetch QDR
     int channel_width = 64;
 
     struct SpeedEntry {
