@@ -227,7 +227,7 @@ public:
         // scaling by comparing: GDDR6 (https://github.com/umd-memsys/DRAMsim3/blob/master/configs/GDDR6_8Gb_x16.ini) vs GDDR5 (https://github.com/umd-memsys/DRAMsim3/blob/master/configs/GDDR5_8Gb_x32.ini)
         {3500,
         7*500/4, 8.0/7,
-        3, 3, 4,
+        2, 2, 3,
         11, 11, 9, 11, 7,
         25, 35, // nRC
         1, 2, 4, 8,
