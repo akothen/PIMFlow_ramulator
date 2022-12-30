@@ -8,6 +8,7 @@
 #include "SpeedyController.h"
 #include "Statistics.h"
 #include "GDDR5.h"
+#include "GDDR6.h"
 #include "HBM.h"
 #include "LPDDR3.h"
 #include "LPDDR4.h"
@@ -73,7 +74,7 @@ protected:
 
   long max_address;
   MapScheme mapping_scheme;
-  
+
 public:
     enum class Type {
         ChRaBaRoCo,
@@ -102,7 +103,7 @@ public:
     string mapping_file;
     bool use_mapping_file;
     bool dump_mapping;
-    
+
     int tx_bits;
 
     Memory(const Config& configs, vector<Controller<T>*> ctrls)
@@ -119,7 +120,7 @@ public:
         int tx = (spec->prefetch_size * spec->channel_width / 8);
         tx_bits = calc_log2(tx);
         assert((1<<tx_bits) == tx);
-        
+
         // Parsing mapping file and initialize mapping table
         use_mapping_file = false;
         dump_mapping = false;
@@ -349,7 +350,7 @@ public:
 
         return false;
     }
-    
+
     void init_mapping_with_file(string filename){
         ifstream file(filename);
         assert(file.good() && "Bad mapping file");
@@ -374,10 +375,10 @@ public:
                     break;
                 size_t end = line.find_first_of(delim, start);
                 string word = line.substr(start, end - start);
-                
+
                 if (word.at(0) == '#')// starting a comment
                     break;
-                
+
                 size_t col_index;
                 int source_min, target_min, target_max;
                 switch (capture_flags){
@@ -436,7 +437,7 @@ public:
         if (dump_mapping)
             dump_mapping_scheme();
     }
-    
+
     void dump_mapping_scheme(){
         cout << "Mapping Scheme: " << endl;
         for (MapScheme::iterator mapit = mapping_scheme.begin(); mapit != mapping_scheme.end(); mapit++)
@@ -452,7 +453,7 @@ public:
             }
         }
     }
-    
+
     void apply_mapping(long addr, std::vector<int>& addr_vec){
         int *sz = spec->org_entry.count;
         int addr_total_bits = sizeof(addr_vec)*8;

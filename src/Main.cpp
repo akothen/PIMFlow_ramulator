@@ -281,6 +281,9 @@ int main(int argc, const char *argv[])
     } else if (standard == "GDDR5") {
       GDDR5* gddr5 = new GDDR5(configs["org"], configs["speed"]);
       start_run(configs, gddr5, files);
+    } else if (standard == "GDDR6") {
+      GDDR6* gddr6 = new GDDR6(configs["org"], configs["speed"]);
+      start_run(configs, gddr6, files);
     } else if (standard == "HBM") {
       HBM* hbm = new HBM(configs["org"], configs["speed"]);
       start_run(configs, hbm, files);

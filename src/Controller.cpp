@@ -1,7 +1,7 @@
 #include "Controller.h"
 #include "SALP.h"
 #include "ALDRAM.h"
-#include "HBM.h"
+#include "GDDR6.h"
 //#include "TLDRAM.h"
 
 using namespace ramulator;
@@ -52,7 +52,7 @@ void Controller<ALDRAM>::update_temp(ALDRAM::Temp current_temperature){
 }
 
 template<>
-void Controller<HBM>::tick() {
+void Controller<GDDR6>::tick() {
     clk++;
     req_queue_length_sum += readq.size() + writeq.size() + pending.size() + pimq.size();
     read_req_queue_length_sum += readq.size() + pending.size();
@@ -96,7 +96,7 @@ void Controller<HBM>::tick() {
     // First check the actq (which has higher priority) to see if there
     // are requests available to service in this cycle
     Queue* queue = &actq;
-    typename HBM::Command cmd;
+    typename GDDR6::Command cmd;
     auto req = scheduler->get_head(queue->q);
 
     bool is_valid_req = (req != queue->q.end());
@@ -121,10 +121,10 @@ void Controller<HBM>::tick() {
         }
         if (refresh_mode && !otherq.size())
             refresh_mode = false;
-        
+
         if (!pimq.size() && otherq.size() && !refresh_mode)
             refresh_mode = true;
-        
+
         queue = !refresh_mode? &pimq : &otherq;
 
         if (refresh_mode)
@@ -191,31 +191,31 @@ void Controller<HBM>::tick() {
     // issue command on behalf of request
     issue_cmd(cmd, get_addr_vec(cmd, req));
 
-    if (cmd == HBM::Command::PREA)
+    if (cmd == GDDR6::Command::PREA)
         num_prea += 1;
-    if (cmd == HBM::Command::PRE)
+    if (cmd == GDDR6::Command::PRE)
         num_pre += 1;
-    if (cmd == HBM::Command::REF)
+    if (cmd == GDDR6::Command::REF)
         num_ref += 1;
-    if (cmd == HBM::Command::GWRITE)
+    if (cmd == GDDR6::Command::GWRITE)
         num_gwrite += 1;
-    if (cmd == HBM::Command::G_ACT0 || cmd == HBM::Command::G_ACT1 
-        || cmd == HBM::Command::G_ACT2 || cmd == HBM::Command::G_ACT3)
+    if (cmd == GDDR6::Command::G_ACT0 || cmd == GDDR6::Command::G_ACT1
+        || cmd == GDDR6::Command::G_ACT2 || cmd == GDDR6::Command::G_ACT3)
         num_gact += 1;
-    if (cmd == HBM::Command::COMP)
+    if (cmd == GDDR6::Command::COMP)
         num_comp += 1;
-    if (cmd == HBM::Command::READRES)
+    if (cmd == GDDR6::Command::READRES)
         num_readres += 1;
 
     // check whether this is the last command (which finishes the request)
     //if (cmd != channel->spec->translate[int(req->type)]){
-    
+
     if (cmd != channel->spec->translate[int(req->type)]) {
         return;
     }
 
     //for Newton
-    if (cmd == HBM::Command::READRES) {
+    if (cmd == GDDR6::Command::READRES) {
         //if issue READRES, turn on refresh_mode
         assert(!refresh_mode);
         refresh_mode = true;
