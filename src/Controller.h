@@ -339,7 +339,7 @@ public:
       double comp_energy = (fp16_mul_array_energy *32  + sram_read_energy *32 + read_energy + fp16_add_array_energy*32) * 16 ;//comp -> read and do adder-tree in each bank
       double actop_energy = 0;
       double total_comp_energy = comp_energy * num_comp/32;
-      double total_actop_energy = 0;
+      double total_actop_energy = num_actop * sram_read_energy;
       double total_pre_energy = num_prea * pre_energy * 16 + num_pre * pre_energy;
       double total_readres_energy = num_readres * sram_read_energy;
       double total_gwrite_energy = num_gwrite * sram_write_energy;
