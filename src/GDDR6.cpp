@@ -239,6 +239,7 @@ void GDDR6::init_lambda()
     lambda[int(Level::BankGroup)][int(Command::G_ACT2)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
     lambda[int(Level::BankGroup)][int(Command::G_ACT3)] = lambda[int(Level::BankGroup)][int(Command::G_ACT0)];
     lambda[int(Level::Rank)][int(Command::COMP)] = [] (DRAM<GDDR6>* node, int id) {/*std::cout<<"COMP"<<std::endl;*/};
+    lambda[int(Level::Rank)][int(Command::ACT_OP)] = [] (DRAM<GDDR6>* node, int id) {/*std::cout<<"ACT_OP"<<std::endl;*/};
     lambda[int(Level::Rank)][int(Command::GWRITE)] = [] (DRAM<GDDR6>* node, int id) {/*std::cout<<"GWRITE"<<std::endl;*/};
     lambda[int(Level::Rank)][int(Command::READRES)] = [] (DRAM<GDDR6>* node, int id) {/*std::cout<<"READRES"<<std::endl;*/};
 }
@@ -345,7 +346,7 @@ void GDDR6::init_timing()
     t[int(Command::SRE)].push_back({Command::SRX, 1, s.nCKESR});
     t[int(Command::SRX)].push_back({Command::SRE, 1, s.nXS});
 
-    //for Newton GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, READRES
+    //for Newton GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, ACT_OP, READRES
     int c = 1;
     if (!GetEnvVar("RAMULATOR_DISABLE_GWRITE_LATENCY_HIDING").empty()) {
         c = 32*s.nCCDS;
@@ -357,6 +358,7 @@ void GDDR6::init_timing()
     t[int(Command::GWRITE)].push_back({Command::G_ACT3, 1, c});
     // t[int(Command::GWRITE)].push_back({Command::PREA, 1, 1});
     t[int(Command::GWRITE)].push_back({Command::COMP, 1, s.nRC+16});
+    t[int(Command::GWRITE)].push_back({Command::ACT_OP, 1, s.nRC});
     t[int(Command::PREA)].push_back({Command::G_ACT0, 1, s.nRP});
     t[int(Command::G_ACT0)].push_back({Command::G_ACT1, 1, s.nFAW});
     t[int(Command::G_ACT1)].push_back({Command::G_ACT2, 1, s.nFAW});
@@ -365,8 +367,16 @@ void GDDR6::init_timing()
     t[int(Command::G_ACT1)].push_back({Command::COMP, 1, s.nRCDR});
     t[int(Command::G_ACT2)].push_back({Command::COMP, 1, s.nRCDR});
     t[int(Command::G_ACT3)].push_back({Command::COMP, 1, s.nRCDR});
+    t[int(Command::G_ACT0)].push_back({Command::ACT_OP, 1, s.nRCDR});
+    t[int(Command::G_ACT1)].push_back({Command::ACT_OP, 1, s.nRCDR});
+    t[int(Command::G_ACT2)].push_back({Command::ACT_OP, 1, s.nRCDR});
+    t[int(Command::G_ACT3)].push_back({Command::ACT_OP, 1, s.nRCDR});
     t[int(Command::COMP)].push_back({Command::COMP, 1, s.nCCDS});
+    t[int(Command::COMP)].push_back({Command::ACT_OP, 1, s.nCCDS});
     t[int(Command::COMP)].push_back({Command::READRES, 1, 1});
+    t[int(Command::ACT_OP)].push_back({Command::COMP, 1, 1});
+    t[int(Command::ACT_OP)].push_back({Command::ACT_OP, 1, 1});
+    t[int(Command::ACT_OP)].push_back({Command::READRES, 1, 1});
     // t[int(Command::READRES)].push_back({Command::PREA, 1, 6});
     // t[int(Command::READRES)].push_back({Command::G_ACT0, 1, 6});
     // t[int(Command::READRES)].push_back({Command::G_ACT1, 1, 6});

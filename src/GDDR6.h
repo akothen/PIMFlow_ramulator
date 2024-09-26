@@ -37,7 +37,7 @@ public:
         ACT, PRE, PREA,
         RD,  WR,  RDA,  WRA,
         REF, PDE, PDX,  SRE, SRX,
-        GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, READRES, // for Newton
+        GWRITE, G_ACT0, G_ACT1, G_ACT2, G_ACT3, COMP, ACT_OP, READRES, // for Newton
         MAX
     };
 
@@ -45,7 +45,7 @@ public:
         "ACT", "PRE", "PREA",
         "RD",  "WR",  "RDA",  "WRA",
         "REF", "PDE", "PDX",  "SRE", "SRX",
-        "GWRITE", "G_ACT0", "G_ACT1", "G_ACT2", "G_ACT3", "COMP", "READRES" // for Newton
+        "GWRITE", "G_ACT0", "G_ACT1", "G_ACT2", "G_ACT3", "COMP", "ACT_OP", "READRES" // for Newton
     };
 
     Level scope[int(Command::MAX)] = {
@@ -74,6 +74,7 @@ public:
     {
         switch(int(cmd)) {
             case int(Command::COMP):
+            case int(Command::ACT_OP):
                 return true;
             default:
                 return false;
@@ -101,6 +102,7 @@ public:
             case int(Command::RDA):
             case int(Command::WRA):
             case int(Command::COMP):
+            case int(Command::ACT_OP):
             //TODO : case int(Command::GWRITE): have to include GWRITE to is_accessing()?
             //TODO : case int(Command::READRES): have to include READRES to is_accessing()?
                 return true;
@@ -143,9 +145,19 @@ public:
 
     /* Translate */
     Command translate[int(Request::Type::MAX)] = {
-        Command::RD,  Command::WR,
-        Command::REF, Command::PDE, Command::SRE,
-        Command::GWRITE, Command::G_ACT0, Command::G_ACT1, Command::G_ACT2, Command::G_ACT3, Command::COMP, Command::READRES // for Newton
+        Command::RD,  
+        Command::WR,
+        Command::REF, 
+        Command::PDE, 
+        Command::SRE,
+        Command::GWRITE, 
+        Command::G_ACT0, 
+        Command::G_ACT1, 
+        Command::G_ACT2, 
+        Command::G_ACT3, 
+        Command::COMP, 
+        Command::ACT_OP, 
+        Command::READRES // for Newton
     };
 
     /* Prerequisite */

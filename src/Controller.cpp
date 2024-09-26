@@ -204,6 +204,8 @@ void Controller<GDDR6>::tick() {
         num_gact += 1;
     if (cmd == GDDR6::Command::COMP)
         num_comp += 1;
+    if (cmd == GDDR6::Command::ACT_OP)
+        num_actop += 1;
     if (cmd == GDDR6::Command::READRES)
         num_readres += 1;
 

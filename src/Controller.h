@@ -64,6 +64,7 @@ protected:
     long num_gwrite;
     long num_gact;
     long num_comp;
+    long num_actop;
     long num_readres;
 
 #ifndef INTEGRATED_WITH_GEM5
@@ -147,6 +148,7 @@ public:
         num_gwrite = 0;
         num_gact = 0;
         num_comp = 0;
+        num_actop = 0;
         num_readres = 0;
 
         // regStats
@@ -335,8 +337,9 @@ public:
       double fp16_mul_array_energy = 1.1e-12 * 16; //this is for Newton
       double fp16_add_array_energy = 0.4e-12 * 16; //this is for Newton
       double comp_energy = (fp16_mul_array_energy *32  + sram_read_energy *32 + read_energy + fp16_add_array_energy*32) * 16 ;//comp -> read and do adder-tree in each bank
-
+      double actop_energy = 0;
       double total_comp_energy = comp_energy * num_comp/32;
+      double total_actop_energy = 0;
       double total_pre_energy = num_prea * pre_energy * 16 + num_pre * pre_energy;
       double total_readres_energy = num_readres * sram_read_energy;
       double total_gwrite_energy = num_gwrite * sram_write_energy;
@@ -346,6 +349,7 @@ public:
       std::cout<<"GWRITE "<<num_gwrite<<std::endl;
       std::cout<<"G_ACT "<<num_gact<<std::endl;
       std::cout<<"COMP "<<num_comp<<std::endl;
+      std::cout<<"ACT_OP "<<num_actop<<std::endl;
       std::cout<<"READRES "<<num_readres<<std::endl;
       std::cout<<"PREA "<<num_prea<<std::endl;
       std::cout<<"PRE "<<num_pre<<std::endl;
@@ -359,6 +363,7 @@ public:
       std::cout<<"                              ENERGY (J)"<<std::endl;
       std::cout<<"===================================================================="<<std::endl;
       std::cout<<"COMP energy "<<total_comp_energy<<std::endl;
+      std::cout <<"ACT_OP energy " <<total_actop_energy<<std::endl;
       std::cout<<"GWRITE energy "<<total_gwrite_energy<<std::endl;
       std::cout<<"READRES energy "<<total_readres_energy<<std::endl;
       std::cout<<"PRE energy "<<total_pre_energy<<std::endl;
@@ -378,6 +383,7 @@ public:
             case int(Request::Type::G_ACT2):
             case int(Request::Type::G_ACT3):
             case int(Request::Type::COMP):
+            case int(Request::Type::ACT_OP):
             case int(Request::Type::READRES):
                 return pimq;
             default: return otherq;

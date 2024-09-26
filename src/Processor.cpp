@@ -486,6 +486,8 @@ bool Trace::get_dramtrace_request(long& req_addr, Request::Type& req_type)
         req_type = Request::Type::G_ACT3;
     else if (line.substr(pos) == "COMP")
         req_type = Request::Type::COMP;
+    else if (line.substr(pos) == "ACT_OP")
+        req_type = Request::Type::ACT_OP;
     else assert(false);
     return true;
 }

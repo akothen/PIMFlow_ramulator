@@ -45,7 +45,7 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
 
     /* run simulation */
     bool stall = false, end = false;
-    int reads = 0, writes = 0, clks = 0, gwrite = 0, gact0 = 0, gact1 = 0, gact2 = 0, gact3 = 0, comp = 0, readres = 0;
+    int reads = 0, writes = 0, clks = 0, gwrite = 0, gact0 = 0, gact1 = 0, gact2 = 0, gact3 = 0, comp = 0, actop = 0, readres = 0;
     long addr = 0;
     Request::Type type = Request::Type::READ;
     map<int, int> latencies;
@@ -72,6 +72,7 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
                 else if (type == Request::Type::G_ACT2) gact2++;
                 else if (type == Request::Type::G_ACT3) gact3++;
                 else if (type == Request::Type::COMP) comp++;
+                else if (type == Request::Type::ACT_OP) actop++;
                 else if (type == Request::Type::READRES) readres++;
             }
         }
@@ -95,6 +96,7 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
     std::cout<<"G_ACT2 : "<<gact2<<std::endl;
     std::cout<<"G_ACT3 : "<<gact3<<std::endl;
     std::cout<<"COMP : "<<comp<<std::endl;
+    std::cout<<"ACT_OP : "<<actop<<std::endl;
     std::cout<<"READRES : "<<readres<<std::endl;
     std::cout<<"===================================================================="<<std::endl;
     */

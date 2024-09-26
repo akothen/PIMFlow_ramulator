@@ -32,6 +32,7 @@ public:
         G_ACT2, 
         G_ACT3, 
         COMP, 
+        ACT_OP,
         READRES,
         EXTENSION,
         MAX
@@ -49,6 +50,7 @@ public:
         "G_ACT2", 
         "G_ACT3", 
         "COMP", 
+        "ACT_OP",
         "READRES",
         "EXTENSION"
     };
